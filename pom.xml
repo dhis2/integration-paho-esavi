@@ -10,11 +10,11 @@
     </parent>
 
     <groupId>org.hisp.dhis.esavi</groupId>
-    <artifactId>dhis2-paho-esavi</artifactId>
+    <artifactId>integration-paho-esavi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>dhis2-paho-esavi</name>
-    <description>dhis2-paho-esavi</description>
+    <name>integration-paho-esavi</name>
+    <description>integration-paho-esavi</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

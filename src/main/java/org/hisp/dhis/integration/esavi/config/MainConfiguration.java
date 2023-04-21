@@ -25,21 +25,45 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.domain;
+package org.hisp.dhis.integration.esavi.config;
 
-import javax.validation.constraints.NotEmpty;
+import lombok.RequiredArgsConstructor;
 
-import lombok.Data;
+import org.hisp.dhis.integration.esavi.config.properties.DhisProperties;
+import org.hisp.dhis.integration.esavi.config.properties.FhirProperties;
+import org.hisp.dhis.integration.sdk.Dhis2ClientBuilder;
+import org.hisp.dhis.integration.sdk.api.Dhis2Client;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 
-@Data
-@JsonIgnoreProperties( ignoreUnknown = true )
-public class OrganisationUnit
+@Configuration
+@RequiredArgsConstructor
+public class MainConfiguration
 {
-    @NotEmpty
-    private String id;
+    private final DhisProperties dhis2Properties;
 
-    @NotEmpty
-    private String name;
+    private final FhirProperties fhirProperties;
+
+    @Bean
+    public Dhis2Client dhis2Client()
+    {
+        return Dhis2ClientBuilder
+            .newClient( dhis2Properties.getBaseUrl(), dhis2Properties.getUsername(), dhis2Properties.getPassword() )
+            .build();
+    }
+
+    @Bean
+    public FhirContext fhirContext()
+    {
+        return fhirProperties.getFhirVersion().newContext();
+    }
+
+    @Bean
+    public IGenericClient fhirClient( FhirContext fhirContext )
+    {
+        return fhirContext.newRestfulGenericClient( fhirProperties.getServerUrl() );
+    }
 }

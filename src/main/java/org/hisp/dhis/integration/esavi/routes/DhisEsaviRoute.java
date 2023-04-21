@@ -25,7 +25,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.routes;
+package org.hisp.dhis.integration.esavi.routes;
 
 import java.util.Map;
 
@@ -33,9 +33,9 @@ import lombok.RequiredArgsConstructor;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
-import org.hisp.dhis.esavi.converters.v1.EsaviContext;
-import org.hisp.dhis.esavi.domain.OptionSet;
-import org.hisp.dhis.esavi.domain.tracker.TrackedEntities;
+import org.hisp.dhis.integration.esavi.converters.v1.EsaviContext;
+import org.hisp.dhis.integration.esavi.domain.OptionSet;
+import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntities;
 import org.hl7.fhir.r4.model.Bundle;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.MediaType;

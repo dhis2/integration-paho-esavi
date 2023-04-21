@@ -25,10 +25,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.domain;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.hisp.dhis.integration.esavi.domain;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -38,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @JsonIgnoreProperties( ignoreUnknown = true )
-public class OptionSet
+public class Option
 {
     @NotEmpty
     private String id;
@@ -48,6 +45,4 @@ public class OptionSet
 
     @NotEmpty
     private String name;
-
-    private List<Option> options = new ArrayList<>();
 }

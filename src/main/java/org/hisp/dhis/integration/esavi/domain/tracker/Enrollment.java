@@ -25,21 +25,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.domain.tracker;
+package org.hisp.dhis.integration.esavi.domain.tracker;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Data
-@JsonInclude( JsonInclude.Include.NON_EMPTY )
 @JsonIgnoreProperties( ignoreUnknown = true )
-public class TrackedEntityAttribute
+public class Enrollment
 {
-    private String attribute;
+    private String enrollment;
 
-    private String code;
+    private String program;
 
-    private String value;
+    private String orgUnit;
+
+    private String orgUnitName;
+
+    private String status;
+
+    private LocalDateTime enrollmentDate;
+
+    private LocalDateTime incidentDate;
+
+    private List<TrackedEntityAttribute> attributes;
+
+    private List<Event> events;
 }

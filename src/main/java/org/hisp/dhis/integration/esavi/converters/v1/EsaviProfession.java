@@ -25,45 +25,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.config;
+package org.hisp.dhis.integration.esavi.converters.v1;
 
-import lombok.RequiredArgsConstructor;
+import static org.springframework.util.StringUtils.hasText;
 
-import org.hisp.dhis.esavi.config.properties.DhisProperties;
-import org.hisp.dhis.esavi.config.properties.FhirProperties;
-import org.hisp.dhis.integration.sdk.Dhis2ClientBuilder;
-import org.hisp.dhis.integration.sdk.api.Dhis2Client;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.hl7.fhir.r4.model.Coding;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-
-@Configuration
-@RequiredArgsConstructor
-public class MainConfiguration
+public class EsaviProfession
 {
-    private final DhisProperties dhis2Properties;
+    private static String SYSTEM = "https://paho.org/fhir/esavi/CodeSystem/ProfesionalNotificadorCS";
 
-    private final FhirProperties fhirProperties;
-
-    @Bean
-    public Dhis2Client dhis2Client()
+    public static Coding get( String value )
     {
-        return Dhis2ClientBuilder
-            .newClient( dhis2Properties.getBaseUrl(), dhis2Properties.getUsername(), dhis2Properties.getPassword() )
-            .build();
+        if ( !hasText( value ) )
+        {
+            return new Coding( SYSTEM, "6", "No definido por el usuario" );
+        }
+
+        switch ( value )
+        {
+        case "1":
+            return new Coding( SYSTEM, "1", "Médico" );
+        case "2":
+            return new Coding( SYSTEM, "2", "Farmacéutico" );
+        case "3":
+            return new Coding( SYSTEM, "3", "Otro Profesional de la Salud" );
+        case "4":
+            return new Coding( SYSTEM, "4", "Abogado" );
+        case "5":
+            return new Coding( SYSTEM, "5", "Usuario u otro profesional no sanitario" );
+        default:
+            return new Coding( SYSTEM, "6", "No definido por el usuario" );
+        }
     }
 
-    @Bean
-    public FhirContext fhirContext()
+    private EsaviProfession()
     {
-        return fhirProperties.getFhirVersion().newContext();
-    }
 
-    @Bean
-    public IGenericClient fhirClient( FhirContext fhirContext )
-    {
-        return fhirContext.newRestfulGenericClient( fhirProperties.getServerUrl() );
     }
 }

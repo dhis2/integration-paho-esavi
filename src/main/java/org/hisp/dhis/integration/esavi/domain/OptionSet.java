@@ -25,42 +25,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.converters.v1;
+package org.hisp.dhis.integration.esavi.domain;
 
-import static org.springframework.util.StringUtils.hasText;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.hl7.fhir.r4.model.Coding;
+import javax.validation.constraints.NotEmpty;
 
-public class EsaviProfession
+import lombok.Data;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Data
+@JsonIgnoreProperties( ignoreUnknown = true )
+public class OptionSet
 {
-    private static String SYSTEM = "https://paho.org/fhir/esavi/CodeSystem/ProfesionalNotificadorCS";
+    @NotEmpty
+    private String id;
 
-    public static Coding get( String value )
-    {
-        if ( !hasText( value ) )
-        {
-            return new Coding( SYSTEM, "6", "No definido por el usuario" );
-        }
+    @NotEmpty
+    private String code;
 
-        switch ( value )
-        {
-        case "1":
-            return new Coding( SYSTEM, "1", "Médico" );
-        case "2":
-            return new Coding( SYSTEM, "2", "Farmacéutico" );
-        case "3":
-            return new Coding( SYSTEM, "3", "Otro Profesional de la Salud" );
-        case "4":
-            return new Coding( SYSTEM, "4", "Abogado" );
-        case "5":
-            return new Coding( SYSTEM, "5", "Usuario u otro profesional no sanitario" );
-        default:
-            return new Coding( SYSTEM, "6", "No definido por el usuario" );
-        }
-    }
+    @NotEmpty
+    private String name;
 
-    private EsaviProfession()
-    {
-
-    }
+    private List<Option> options = new ArrayList<>();
 }

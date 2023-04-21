@@ -25,35 +25,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.converters.v1;
+package org.hisp.dhis.integration.esavi.domain.tracker;
 
-import org.hl7.fhir.r4.model.Enumerations;
+import lombok.Data;
 
-public final class EsaviGender
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Data
+@JsonIgnoreProperties( ignoreUnknown = true )
+public class DataValue
 {
+    private String dataElement;
 
-    public static Enumerations.AdministrativeGender get( String gender )
-    {
-        if ( gender == null )
-        {
-            return Enumerations.AdministrativeGender.UNKNOWN;
-        }
-
-        switch ( gender )
-        {
-        case "1":
-            return Enumerations.AdministrativeGender.MALE;
-        case "2":
-            return Enumerations.AdministrativeGender.FEMALE;
-        case "3":
-            return Enumerations.AdministrativeGender.OTHER;
-        default:
-            return Enumerations.AdministrativeGender.UNKNOWN;
-        }
-    }
-
-    private EsaviGender()
-    {
-
-    }
+    private String value;
 }

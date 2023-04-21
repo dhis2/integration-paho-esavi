@@ -25,34 +25,45 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.domain.tracker;
+package org.hisp.dhis.integration.esavi.converters;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
-import lombok.Data;
+import org.apache.camel.Converter;
+import org.apache.camel.Exchange;
+import org.apache.camel.TypeConverters;
+import org.apache.camel.component.fhir.internal.FhirConstants;
+import org.hisp.dhis.integration.esavi.config.properties.DhisProperties;
+import org.hisp.dhis.integration.esavi.converters.v1.EsaviProfile;
+import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntities;
+import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntity;
+import org.hl7.fhir.r4.model.*;
+import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@Data
-@JsonIgnoreProperties( ignoreUnknown = true )
-public class Enrollment
+@Component
+@RequiredArgsConstructor
+public class TrackedEntityToBundleConverter implements TypeConverters
 {
-    private String enrollment;
+    private final DhisProperties dhisProperties;
 
-    private String program;
+    @Converter
+    public Bundle teToBundle( TrackedEntities trackedEntities, Exchange exchange )
+    {
+        Bundle bundle = new Bundle().setType( Bundle.BundleType.BATCH );
 
-    private String orgUnit;
+        for ( TrackedEntity trackedEntity : trackedEntities.getTrackedEntities() )
+        {
+            QuestionnaireResponse questionnaireResponse = EsaviProfile.create( trackedEntity );
 
-    private String orgUnitName;
+            bundle.addEntry()
+                .setResource( questionnaireResponse )
+                .getRequest()
+                .setUrl( "QuestionnaireResponse?identifier=" + questionnaireResponse.getId() )
+                .setMethod( Bundle.HTTPVerb.PUT );
+        }
 
-    private String status;
+        exchange.getIn().setHeader( FhirConstants.PROPERTY_PREFIX + "bundle", bundle );
 
-    private LocalDateTime enrollmentDate;
-
-    private LocalDateTime incidentDate;
-
-    private List<TrackedEntityAttribute> attributes;
-
-    private List<Event> events;
+        return bundle;
+    }
 }

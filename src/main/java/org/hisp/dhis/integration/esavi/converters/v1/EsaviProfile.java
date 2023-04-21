@@ -25,7 +25,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.converters.v1;
+package org.hisp.dhis.integration.esavi.converters.v1;
 
 import static org.hl7.fhir.r4.model.QuestionnaireResponse.QuestionnaireResponseStatus.COMPLETED;
 import static org.springframework.util.StringUtils.hasText;
@@ -36,7 +36,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import org.hisp.dhis.esavi.domain.tracker.TrackedEntity;
+import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntity;
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 

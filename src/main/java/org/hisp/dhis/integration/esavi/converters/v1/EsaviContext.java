@@ -25,7 +25,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.converters.v1;
+package org.hisp.dhis.integration.esavi.converters.v1;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -35,9 +35,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.Data;
 
-import org.hisp.dhis.esavi.domain.Option;
-import org.hisp.dhis.esavi.domain.OptionSet;
+import org.hisp.dhis.integration.esavi.domain.Option;
+import org.hisp.dhis.integration.esavi.domain.OptionSet;
 import org.hisp.dhis.esavi.domain.tracker.*;
+import org.hisp.dhis.integration.esavi.domain.tracker.DataValue;
+import org.hisp.dhis.integration.esavi.domain.tracker.Enrollment;
+import org.hisp.dhis.integration.esavi.domain.tracker.Event;
+import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntity;
+import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntityAttribute;
 
 @Data
 public class EsaviContext

@@ -25,28 +25,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.config.properties;
-
-import javax.validation.constraints.NotNull;
+package org.hisp.dhis.integration.esavi.domain.tracker;
 
 import lombok.Data;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Data
-@Component
-@Validated
-@ConfigurationProperties( "dhis2-to-esavi.dhis2" )
-public class DhisProperties
+@JsonInclude( JsonInclude.Include.NON_EMPTY )
+@JsonIgnoreProperties( ignoreUnknown = true )
+public class TrackedEntityAttribute
 {
-    @NotNull
-    private String baseUrl;
+    private String attribute;
 
-    @NotNull
-    private String username;
+    private String code;
 
-    @NotNull
-    private String password;
+    private String value;
 }

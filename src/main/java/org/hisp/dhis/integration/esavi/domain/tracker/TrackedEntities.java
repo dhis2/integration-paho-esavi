@@ -25,24 +25,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.config.properties;
+package org.hisp.dhis.integration.esavi.domain.tracker;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
-
-import ca.uhn.fhir.context.FhirVersionEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Data
-@Component
-@ConfigurationProperties( "dhis2-to-esavi.fhir" )
-public class FhirProperties
+@JsonIgnoreProperties( ignoreUnknown = true )
+public class TrackedEntities
 {
-    private String serverUrl;
-
-    // we only support R4
-    private FhirVersionEnum fhirVersion = FhirVersionEnum.R4;
-
-    private boolean disabled;
+    @JsonProperty( "trackedEntityInstances" )
+    private List<TrackedEntity> trackedEntities = new ArrayList<>();
 }

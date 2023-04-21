@@ -25,41 +25,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.converters.v1;
+package org.hisp.dhis.integration.esavi.config.properties;
 
-public enum EsaviOutcomeCode
+import lombok.Data;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+import ca.uhn.fhir.context.FhirVersionEnum;
+
+@Data
+@Component
+@ConfigurationProperties( "dhis2-to-esavi.fhir" )
+public class FhirProperties
 {
-    RECOVERING_OR_RESOLVING( "2", "En recuperación" ),
-    RECOVERED_OR_RESOLVED( "1", "Recuperado Completamente" ),
-    RECOVERED_OR_RESOLVED_WITH_SEQUELAE( "4", "Recuperado con secuelas" ),
-    NOT_RECOVERED_OR_NOT_RESOLVED( "3", "No recuperado" ),
-    UNKNOWN( "0", "Desconocido" ),
-    DIED( "5", "Muerte" );
+    private String serverUrl;
 
-    private final String system = "https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceCS";
+    // we only support R4
+    private FhirVersionEnum fhirVersion = FhirVersionEnum.R4;
 
-    private final String code;
-
-    private final String display;
-
-    EsaviOutcomeCode( String code, String display )
-    {
-        this.code = code;
-        this.display = display;
-    }
-
-    public String getSystem()
-    {
-        return system;
-    }
-
-    public String getCode()
-    {
-        return code;
-    }
-
-    public String getDisplay()
-    {
-        return display;
-    }
+    private boolean disabled;
 }

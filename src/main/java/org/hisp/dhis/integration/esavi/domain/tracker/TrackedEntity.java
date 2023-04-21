@@ -25,31 +25,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi;
+package org.hisp.dhis.integration.esavi.domain.tracker;
 
-import javax.servlet.Servlet;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import org.apache.camel.component.servlet.CamelHttpTransportServlet;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.context.annotation.Bean;
+import lombok.Data;
 
-@SpringBootApplication
-public class Application
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Data
+@JsonIgnoreProperties( ignoreUnknown = true )
+public class TrackedEntity
 {
-    public static void main( String[] args )
-    {
-        System.setProperty( "file.encoding", "UTF-8" );
-        SpringApplication.run( Application.class, args );
-    }
+    @JsonAlias( "trackedEntityInstance" )
+    private String id;
 
-    @Bean
-    public ServletRegistrationBean<Servlet> servletRegistrationBean()
-    {
-        ServletRegistrationBean<Servlet> registration = new ServletRegistrationBean<>( new CamelHttpTransportServlet(),
-            "/fhir/baseR4/*" );
-        registration.setName( "CamelServlet" );
-        return registration;
-    }
+    private String trackedEntityType;
+
+    private String orgUnit;
+
+    private LocalDateTime lastUpdated;
+
+    private List<TrackedEntityAttribute> attributes;
+
+    private List<Enrollment> enrollments;
 }

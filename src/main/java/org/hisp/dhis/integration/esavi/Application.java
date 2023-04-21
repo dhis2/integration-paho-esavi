@@ -25,45 +25,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.converters;
+package org.hisp.dhis.integration.esavi;
 
-import lombok.RequiredArgsConstructor;
+import javax.servlet.Servlet;
 
-import org.apache.camel.Converter;
-import org.apache.camel.Exchange;
-import org.apache.camel.TypeConverters;
-import org.apache.camel.component.fhir.internal.FhirConstants;
-import org.hisp.dhis.esavi.config.properties.DhisProperties;
-import org.hisp.dhis.esavi.converters.v1.EsaviProfile;
-import org.hisp.dhis.esavi.domain.tracker.TrackedEntities;
-import org.hisp.dhis.esavi.domain.tracker.TrackedEntity;
-import org.hl7.fhir.r4.model.*;
-import org.springframework.stereotype.Component;
+import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
 
-@Component
-@RequiredArgsConstructor
-public class TrackedEntityToBundleConverter implements TypeConverters
+@SpringBootApplication
+public class Application
 {
-    private final DhisProperties dhisProperties;
-
-    @Converter
-    public Bundle teToBundle( TrackedEntities trackedEntities, Exchange exchange )
+    public static void main( String[] args )
     {
-        Bundle bundle = new Bundle().setType( Bundle.BundleType.BATCH );
+        System.setProperty( "file.encoding", "UTF-8" );
+        SpringApplication.run( Application.class, args );
+    }
 
-        for ( TrackedEntity trackedEntity : trackedEntities.getTrackedEntities() )
-        {
-            QuestionnaireResponse questionnaireResponse = EsaviProfile.create( trackedEntity );
-
-            bundle.addEntry()
-                .setResource( questionnaireResponse )
-                .getRequest()
-                .setUrl( "QuestionnaireResponse?identifier=" + questionnaireResponse.getId() )
-                .setMethod( Bundle.HTTPVerb.PUT );
-        }
-
-        exchange.getIn().setHeader( FhirConstants.PROPERTY_PREFIX + "bundle", bundle );
-
-        return bundle;
+    @Bean
+    public ServletRegistrationBean<Servlet> servletRegistrationBean()
+    {
+        ServletRegistrationBean<Servlet> registration = new ServletRegistrationBean<>( new CamelHttpTransportServlet(),
+            "/fhir/baseR4/*" );
+        registration.setName( "CamelServlet" );
+        return registration;
     }
 }

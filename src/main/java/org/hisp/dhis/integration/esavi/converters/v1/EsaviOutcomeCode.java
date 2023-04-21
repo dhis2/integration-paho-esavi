@@ -25,20 +25,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.esavi.domain.tracker;
+package org.hisp.dhis.integration.esavi.converters.v1;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lombok.Data;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@Data
-@JsonIgnoreProperties( ignoreUnknown = true )
-public class TrackedEntities
+public enum EsaviOutcomeCode
 {
-    @JsonProperty( "trackedEntityInstances" )
-    private List<TrackedEntity> trackedEntities = new ArrayList<>();
+    RECOVERING_OR_RESOLVING( "2", "En recuperación" ),
+    RECOVERED_OR_RESOLVED( "1", "Recuperado Completamente" ),
+    RECOVERED_OR_RESOLVED_WITH_SEQUELAE( "4", "Recuperado con secuelas" ),
+    NOT_RECOVERED_OR_NOT_RESOLVED( "3", "No recuperado" ),
+    UNKNOWN( "0", "Desconocido" ),
+    DIED( "5", "Muerte" );
+
+    private final String system = "https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceCS";
+
+    private final String code;
+
+    private final String display;
+
+    EsaviOutcomeCode( String code, String display )
+    {
+        this.code = code;
+        this.display = display;
+    }
+
+    public String getSystem()
+    {
+        return system;
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public String getDisplay()
+    {
+        return display;
+    }
 }
