@@ -75,7 +75,7 @@ public class DhisEsaviRoute extends RouteBuilder
 
         rest( "/" )
             .get( "/QuestionnaireResponse" )
-            .routeId("get-esavi-cases")
+            .routeId( "get-esavi-cases" )
             .produces( MediaType.APPLICATION_JSON_VALUE )
             .to( "direct:fetch-esavi-cases" );
 

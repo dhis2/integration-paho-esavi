@@ -37,7 +37,6 @@ import lombok.Data;
 
 import org.hisp.dhis.integration.esavi.domain.Option;
 import org.hisp.dhis.integration.esavi.domain.OptionSet;
-import org.hisp.dhis.esavi.domain.tracker.*;
 import org.hisp.dhis.integration.esavi.domain.tracker.DataValue;
 import org.hisp.dhis.integration.esavi.domain.tracker.Enrollment;
 import org.hisp.dhis.integration.esavi.domain.tracker.Event;
