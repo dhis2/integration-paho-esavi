@@ -33,5 +33,5 @@ build/
 .vscode/
 
 .DS_Store
-application.yml
+/application.yml
 data/

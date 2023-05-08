@@ -1,0 +1,8 @@
+# Just an example. Please create one and have it alongside your JAR file.
+dhis2-to-esavi:
+  dhis2:
+    base-url: https://example.com
+    username: admin
+    password: district
+  fhir:
+    server-url: https://example.com/baseR4
