@@ -112,6 +112,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <finalName>integration-paho-esavi</finalName>
                 </configuration>
             </plugin>
             <plugin>
