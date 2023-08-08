@@ -37,11 +37,12 @@ import org.hisp.dhis.integration.esavi.converters.v1.EsaviContext;
 import org.hisp.dhis.integration.esavi.domain.OptionSet;
 import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntities;
 import org.hl7.fhir.r4.model.Bundle;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import javax.annotation.Nonnull;
 
 @Component
 @RequiredArgsConstructor
@@ -97,7 +98,7 @@ public class DhisEsaviRoute extends RouteBuilder
             .marshal().fhirJson( "R4", true );
     }
 
-    @NotNull
+    @Nonnull
     private static JacksonDataFormat getJacksonDataFormat( Class<?> klass, boolean prettyPrint )
     {
         JacksonDataFormat jacksonDataFormat = new JacksonDataFormat( klass );
