@@ -203,8 +203,15 @@ public final class EsaviProfile
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "codigoProfesionNotificador" ) );
 
-        item.addAnswer()
-            .setValue( EsaviProfession.get( ctx.dataElement( "Tgi4xP5DCzr" ) ) );
+        // 0..1 cardinality in IG
+        if ( ctx.hasDataElement( "Tgi4xP5DCzr" ) )
+        {
+            item.addAnswer()
+                    .setValue( EsaviProfession.get( ctx.dataElement( "Tgi4xP5DCzr" ) ) );
+        } else { // no data value for that DE, but there is default option in the IG
+            item.addAnswer()
+                    .setValue( EsaviProfession.get(null) );
+        }
 
         return item;
     }
