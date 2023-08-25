@@ -53,7 +53,7 @@
         <dependency>
             <groupId>org.hisp.dhis.integration.camel</groupId>
             <artifactId>camel-dhis2</artifactId>
-            <version>2.0.1</version>
+            <version>3.0.0</version>
         </dependency>
 
         <!-- Camel -->
