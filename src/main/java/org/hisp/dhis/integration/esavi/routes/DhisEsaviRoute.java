@@ -93,9 +93,11 @@ public class DhisEsaviRoute extends RouteBuilder
                 // "trackedEntityInstance", "qq2LGeKLql9", // exercise 3
                 "fields", "*,enrollments[events[*],*]" ) )
             .to( "dhis2://get/resource?path=trackedEntityInstances&client=#dhis2Client" )
+            .to("file://./output?fileName=dhis2-payload.json&noop=true") // send to file
             .unmarshal( getJacksonDataFormat( TrackedEntities.class, true ) )
             .convertBodyTo( Bundle.class )
-            .marshal().fhirJson( "R4", true );
+            .marshal().fhirJson( "R4", true )
+            .to("file://./output?fileName=fhir-payload.json&noop=true"); // send to file
     }
 
     @Nonnull
