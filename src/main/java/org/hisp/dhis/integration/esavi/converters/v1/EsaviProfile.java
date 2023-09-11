@@ -703,7 +703,7 @@ public final class EsaviProfile
 
         item.addAnswer()
             .setValue(
-                new Coding( "https://paho.org/fhir/esavi/CodeSystem/EsaviMedDRACS", ctx.dataElement( id ), display ) );
+                new Coding( "https://paho.org/fhir/esavi/CodeSystem/MedDRACS", ctx.dataElement( id ), display ) );
 
         return item;
     }
