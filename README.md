@@ -20,7 +20,7 @@ Before you start the project you need to set up some basic configuration, this y
 # Just an example. Please create one and have it alongside your JAR file.
 dhis2-to-esavi:
   dhis2:
-    base-url: https://example.com/dhis
+    base-url: https://example.com/dhis/api
     username: admin
     password: district
   fhir:
