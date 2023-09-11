@@ -53,7 +53,7 @@ public class DhisEsaviRoute extends RouteBuilder
         throws Exception
     {
         from( "timer:foo?repeatCount=1" )
-            .routeId( "DHIS2-to-EASVI-FHIR" )
+            .routeId( "DHIS2-to-ESAVI-FHIR" )
             .to( "direct:fetch-whodrug" )
             .to( "direct:fetch-meddra" )
             .log( "Preload done." );
