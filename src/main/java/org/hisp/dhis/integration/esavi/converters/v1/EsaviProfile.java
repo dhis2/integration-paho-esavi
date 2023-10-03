@@ -153,9 +153,9 @@ public final class EsaviProfile
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "paisOrigen-Reg" ) );
 
-        // TODO get from TE
+        // TODO (Future) Update source of this field. Currently fixed to Paraguay (PRY)
         item.addAnswer()
-            .setValue( new Coding( "urn:iso:std:iso:3166", "COL", "Columbia" ) );
+            .setValue( new Coding( "urn:iso:std:iso:3166", "PRY", "Paraguay" ) );
 
         return item;
     }
