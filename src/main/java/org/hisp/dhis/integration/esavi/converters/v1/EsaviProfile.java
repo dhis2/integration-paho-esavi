@@ -900,7 +900,7 @@ public final class EsaviProfile
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviSeriousnessFetalDeath(
         EsaviContext ctx )
     {
-        if ( !ctx.dataElementIsTrue( "M3nwvMsaaWJ" ) )
+        if ( !ctx.dataElementIsTrue( "IEOkkWbZwB0" ) )
         {
             return null;
         }
@@ -909,7 +909,7 @@ public final class EsaviProfile
             new StringType( "gravMuerteFetal" ) );
 
         item.addAnswer()
-            .setValue( new BooleanType( ctx.dataElementAsBoolean( "M3nwvMsaaWJ" ) ) );
+            .setValue( new BooleanType( ctx.dataElementAsBoolean( "IEOkkWbZwB0" ) ) );
 
         return item;
     }
