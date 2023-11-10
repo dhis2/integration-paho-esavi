@@ -34,6 +34,7 @@ import lombok.Data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
 
 @Data
 @JsonIgnoreProperties( ignoreUnknown = true )

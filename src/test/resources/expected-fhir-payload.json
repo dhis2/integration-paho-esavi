@@ -1,0 +1,173 @@
+{
+  "resourceType": "Bundle",
+  "type": "batch",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "sFoa9o29JDe",
+        "meta": {
+          "profile": [
+            "https://paho.org/fhir/esavi/StructureDefinition/ESAVIQuestionnaireResponse"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">RESPUESTA A CUESTIONARIO ID DEM_2023_11_09_000002</div>"
+        },
+        "identifier": {
+          "system": "http://ops.org/esavi/COL",
+          "value": "DEM_2023_11_09_000002"
+        },
+        "questionnaire": "https://paho.org/fhir/esavi/Questionnaire/CuestionarioESAVI",
+        "status": "completed",
+        "authored": "2023-11-10T12:51:21+01:00",
+        "item": [
+          {
+            "linkId": "datosNotificacionGeneral",
+            "item": [
+              {
+                "linkId": "datosNotificacion",
+                "item": [
+                  {
+                    "linkId": "paisOrigen-Reg",
+                    "answer": [
+                      {
+                        "valueCoding": {
+                          "system": "urn:iso:std:iso:3166",
+                          "code": "PRY",
+                          "display": "Paraguay"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "nombreOrganizacionNotificadora",
+                    "answer": [
+                      {
+                        "valueString": "Acme"
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "nombreDireccionOrganizacion",
+                    "answer": [
+                      {
+                        "valueString": "Bogota, D.C. (Municipio), Santa Fe de Bogota DC, Colombia"
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "codigoProfesionNotificador",
+                    "answer": [
+                      {
+                        "valueCoding": {
+                          "system": "https://paho.org/fhir/esavi/CodeSystem/ProfesionalNotificadorCS",
+                          "code": "6",
+                          "display": "No definido por el usuario"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "linkId": "fechas",
+                "item": [
+                  {
+                    "linkId": "fechaConsulta",
+                    "answer": [
+                      {
+                        "valueDate": "2023-11-09"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "linkId": "datosIdVacunado",
+            "item": [
+              {
+                "linkId": "datosPaciente",
+                "item": [
+                  {
+                    "linkId": "numeroCaso",
+                    "answer": [
+                      {
+                        "valueString": "DEM_2023_11_09_000002"
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "nombreResidenciaHabitual",
+                    "answer": [
+                      {
+                        "valueString": "Florianópolis"
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "sexoPaciente",
+                    "answer": [
+                      {
+                        "valueCoding": {
+                          "system": "http://hl7.org/fhir/administrative-gender",
+                          "code": "male",
+                          "display": "Male"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "linkId": "antecedentesFarmacosVacunas"
+          },
+          {
+            "linkId": "registroESAVI",
+            "item": [
+              {
+                "linkId": "gravedadESAVI",
+                "item": [
+                  {
+                    "linkId": "tipoGravedad",
+                    "answer": [
+                      {
+                        "valueBoolean": false
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "linkId": "desenlaceESAVI",
+                "item": [
+                  {
+                    "linkId": "codDesenlaceESAVI",
+                    "answer": [
+                      {
+                        "valueCoding": {
+                          "system": "https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceCS",
+                          "code": "0",
+                          "display": "Desconocido"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "QuestionnaireResponse?identifier=sFoa9o29JDe"
+      }
+    }
+  ]
+}

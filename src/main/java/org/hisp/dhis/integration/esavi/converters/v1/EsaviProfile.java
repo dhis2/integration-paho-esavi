@@ -36,7 +36,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntity;
+import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
@@ -48,7 +48,7 @@ public final class EsaviProfile
         EsaviContext ctx = new EsaviContext( trackedEntity );
 
         QuestionnaireResponse response = new QuestionnaireResponse();
-        response.setId( trackedEntity.getId() );
+        response.setId( (String) trackedEntity.get("trackedEntityInstance") );
         response.setAuthored( new Date() );
         response.setStatus( COMPLETED );
 
@@ -167,7 +167,7 @@ public final class EsaviProfile
             new StringType( "nombreOrganizacionNotificadora" ) );
 
         item.addAnswer()
-            .setValue( new StringType( ctx.getEnrollment().getOrgUnitName() ) );
+            .setValue( new StringType( ctx.getEnrollment().getOrgUnitName().get() ) );
 
         return item;
     }
@@ -564,7 +564,7 @@ public final class EsaviProfile
             new StringType( "nombreVacunatorio" ) );
 
         item.addAnswer()
-            .setValue( new StringType( ctx.getEnrollment().getOrgUnitName() ) );
+            .setValue( new StringType( ctx.getEnrollment().getOrgUnitName().get() ) );
 
         return item;
     }

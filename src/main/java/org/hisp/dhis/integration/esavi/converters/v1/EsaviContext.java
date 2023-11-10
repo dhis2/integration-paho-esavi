@@ -27,21 +27,20 @@
  */
 package org.hisp.dhis.integration.esavi.converters.v1;
 
-import static org.springframework.util.StringUtils.hasText;
+import lombok.Data;
+import org.hisp.dhis.api.model.v2_38_1.Attribute__2;
+import org.hisp.dhis.api.model.v2_38_1.DataValue__3;
+import org.hisp.dhis.api.model.v2_38_1.Enrollment__2;
+import org.hisp.dhis.api.model.v2_38_1.Event__2;
+import org.hisp.dhis.api.model.v2_38_1.Option;
+import org.hisp.dhis.api.model.v2_38_1.OptionSet;
+import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import lombok.Data;
-
-import org.hisp.dhis.integration.esavi.domain.Option;
-import org.hisp.dhis.integration.esavi.domain.OptionSet;
-import org.hisp.dhis.integration.esavi.domain.tracker.DataValue;
-import org.hisp.dhis.integration.esavi.domain.tracker.Enrollment;
-import org.hisp.dhis.integration.esavi.domain.tracker.Event;
-import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntity;
-import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntityAttribute;
+import static org.springframework.util.StringUtils.hasText;
 
 @Data
 public class EsaviContext
@@ -65,14 +64,14 @@ public class EsaviContext
         return trackedEntity;
     }
 
-    public Enrollment getEnrollment()
+    public Enrollment__2 getEnrollment()
     {
         if ( trackedEntity.getEnrollments().isEmpty() )
         {
             throw new RuntimeException( "No enrollments found." );
         }
 
-        return trackedEntity.getEnrollments().get( 0 );
+        return trackedEntity.getEnrollments().get().get( 0 );
     }
 
     public String dataElement( String id )
@@ -196,39 +195,39 @@ public class EsaviContext
 
     private void setup()
     {
-        for ( TrackedEntityAttribute attribute : trackedEntity.getAttributes() )
+        for ( Attribute__2 attribute : trackedEntity.getAttributes().get() )
         {
-            attributes.put( attribute.getAttribute(), attribute.getValue() );
+            attributes.put( attribute.getAttribute().get(), attribute.getValue().get() );
         }
 
-        if ( trackedEntity.getEnrollments().isEmpty() )
+        if ( trackedEntity.getEnrollments().get().isEmpty() )
         {
             return;
         }
 
-        Enrollment enrollment = trackedEntity.getEnrollments().get( 0 );
+        Enrollment__2 enrollment = trackedEntity.getEnrollments().get().get( 0 );
 
-        for ( Event event : enrollment.getEvents() )
+        for ( Event__2 event : enrollment.getEvents().get() )
         {
-            for ( DataValue dataValue : event.getDataValues() )
+            for ( DataValue__3 dataValue : event.getDataValues().get() )
             {
-                dataValues.put( dataValue.getDataElement(), dataValue.getValue() );
+                dataValues.put( dataValue.getDataElement().get(), dataValue.getValue().get() );
             }
         }
     }
 
     public static void addOptionSet( OptionSet optionSet )
     {
-        if ( optionSet == null || optionSets.containsKey( optionSet.getId() ) )
+        if ( optionSet == null || optionSets.containsKey( optionSet.getId().get() ) )
         {
             return;
         }
 
-        optionSets.put( optionSet.getId(), new HashMap<>() );
+        optionSets.put( optionSet.getId().get(), new HashMap<>() );
 
-        for ( Option option : optionSet.getOptions() )
+        for ( Option option : optionSet.getOptions().get() )
         {
-            optionSets.get( optionSet.getId() ).put( option.getCode(), option.getName() );
+            optionSets.get( optionSet.getId().get() ).put( option.getCode().get(), option.getName().get() );
         }
     }
 }
