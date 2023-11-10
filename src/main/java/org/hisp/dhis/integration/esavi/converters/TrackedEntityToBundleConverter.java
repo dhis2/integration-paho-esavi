@@ -33,10 +33,10 @@ import org.apache.camel.Converter;
 import org.apache.camel.Exchange;
 import org.apache.camel.TypeConverters;
 import org.apache.camel.component.fhir.internal.FhirConstants;
+import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
 import org.hisp.dhis.integration.esavi.config.properties.DhisProperties;
 import org.hisp.dhis.integration.esavi.converters.v1.EsaviProfile;
 import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntities;
-import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntity;
 import org.hl7.fhir.r4.model.*;
 import org.springframework.stereotype.Component;
 
