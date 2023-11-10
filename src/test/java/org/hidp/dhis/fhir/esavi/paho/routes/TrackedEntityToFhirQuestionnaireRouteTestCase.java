@@ -94,9 +94,7 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
 
         String dhis2Url = String.format( "http://localhost:%s/api", DHIS2_CONTAINER.getFirstMappedPort() );
 
-        Dhis2Client dhis2Client = Dhis2ClientBuilder.newClient( dhis2Url,
-                new BasicCredentialsSecurityContext( "admin", "district" ),
-                5, 300000, 500000, 500000, 500000, 500000 )
+        Dhis2Client dhis2Client = Dhis2ClientBuilder.newClient( dhis2Url, "admin", "district" )
             .build();
 
         String orgUnitId = createOrgUnit( dhis2Client );
