@@ -35,7 +35,10 @@ import org.hisp.dhis.api.model.v2_38_1.Event__2;
 import org.hisp.dhis.api.model.v2_38_1.Option;
 import org.hisp.dhis.api.model.v2_38_1.OptionSet;
 import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
+import org.hisp.dhis.integration.esavi.config.properties.DhisProperties;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,23 +48,23 @@ import static org.springframework.util.StringUtils.hasText;
 @Data
 public class EsaviContext
 {
+    private final static Map<String, Map<String, String>> optionSets = new ConcurrentHashMap<>();
+
     private final TrackedEntity trackedEntity;
 
     private final Map<String, String> dataValues = new HashMap<>();
 
     private final Map<String, String> attributes = new HashMap<>();
 
-    private final static Map<String, Map<String, String>> optionSets = new ConcurrentHashMap<>();
+    private final DhisProperties dhisProperties;
 
-    public EsaviContext( TrackedEntity trackedEntity )
+    private String completedDate;
+
+    public EsaviContext( TrackedEntity trackedEntity, DhisProperties dhisProperties )
     {
         this.trackedEntity = trackedEntity;
+        this.dhisProperties = dhisProperties;
         setup();
-    }
-
-    public TrackedEntity getTrackedEntity()
-    {
-        return trackedEntity;
     }
 
     public Enrollment__2 getEnrollment()
@@ -209,6 +212,19 @@ public class EsaviContext
 
         for ( Event__2 event : enrollment.getEvents().get() )
         {
+            if ( event.getProgramStage().isPresent() && event.getProgramStage().get()
+                .equals( dhisProperties.getEsaviProgramStageId() ) )
+            {
+                try
+                {
+                    completedDate = new SimpleDateFormat( "yyyy-MM-dd" ).format(
+                        new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS" ).parse( event.get( "completedDate" ) ) );
+                }
+                catch ( ParseException e )
+                {
+                    throw new RuntimeException( e );
+                }
+            }
             for ( DataValue__3 dataValue : event.getDataValues().get() )
             {
                 dataValues.put( dataValue.getDataElement().get(), dataValue.getValue().get() );

@@ -4,5 +4,6 @@ dhis2-to-esavi:
     base-url: https://example.com/dhis2/api
     username: admin
     password: district
+    esavi-program-stage-id: lSpdre0srBn
   fhir:
     server-url: https://example.com/fhir
