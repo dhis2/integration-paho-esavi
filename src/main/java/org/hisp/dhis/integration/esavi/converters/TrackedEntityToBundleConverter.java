@@ -38,12 +38,14 @@ import org.hisp.dhis.integration.esavi.config.properties.DhisProperties;
 import org.hisp.dhis.integration.esavi.converters.v1.EsaviProfile;
 import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntities;
 import org.hl7.fhir.r4.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class TrackedEntityToBundleConverter implements TypeConverters
 {
+    @Autowired
     private final DhisProperties dhisProperties;
 
     @Converter
@@ -53,7 +55,7 @@ public class TrackedEntityToBundleConverter implements TypeConverters
 
         for ( TrackedEntity trackedEntity : trackedEntities.getTrackedEntities() )
         {
-            QuestionnaireResponse questionnaireResponse = EsaviProfile.create( trackedEntity );
+            QuestionnaireResponse questionnaireResponse = EsaviProfile.create( trackedEntity, dhisProperties );
 
             bundle.addEntry()
                 .setResource( questionnaireResponse )

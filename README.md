@@ -2,7 +2,7 @@
 
 ![Build Status](https://github.com/dhis2/integration-paho-esavi/workflows/CI/badge.svg)
 
-**Requirements**: JDK 11, Maven 3
+**Requirements**: JDK 17, Maven 3
 
 ## Quickstart
 
@@ -23,6 +23,7 @@ dhis2-to-esavi:
     base-url: https://example.com/dhis/api
     username: admin
     password: district
+    esavi-program-stage-id: lSpdre0srBn
   fhir:
     server-url: https://example.com/fhir # not supported yet
 ```

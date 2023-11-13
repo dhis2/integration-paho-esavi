@@ -21,7 +21,7 @@
         },
         "questionnaire": "https://paho.org/fhir/esavi/Questionnaire/CuestionarioESAVI",
         "status": "completed",
-        "authored": "2023-11-10T12:51:21+01:00",
+        "authored": "2023-11-13T17:04:27+01:00",
         "item": [
           {
             "linkId": "datosNotificacionGeneral",
@@ -79,6 +79,30 @@
                     "answer": [
                       {
                         "valueDate": "2023-11-09"
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "fechaNotificacion",
+                    "answer": [
+                      {
+                        "valueDate": "2023-11-13"
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "fechaLlenadoFicha",
+                    "answer": [
+                      {
+                        "valueDate": "2023-11-13"
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "fechaRepoNacional",
+                    "answer": [
+                      {
+                        "valueDate": "2023-11-13"
                       }
                     ]
                   }

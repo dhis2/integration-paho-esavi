@@ -37,15 +37,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
+import org.hisp.dhis.integration.esavi.config.properties.DhisProperties;
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
 public final class EsaviProfile
 {
 
-    public static QuestionnaireResponse create( TrackedEntity trackedEntity )
+    public static QuestionnaireResponse create( TrackedEntity trackedEntity, DhisProperties dhisProperties )
     {
-        EsaviContext ctx = new EsaviContext( trackedEntity );
+        EsaviContext ctx = new EsaviContext( trackedEntity, dhisProperties );
 
         QuestionnaireResponse response = new QuestionnaireResponse();
         response.setId( (String) trackedEntity.get("trackedEntityInstance") );
@@ -115,7 +116,10 @@ public final class EsaviProfile
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "fechaNotificacion" ) );
 
-        return null;
+        item.addAnswer()
+            .setValue( new DateType( ctx.getCompletedDate() ) );
+
+        return item;
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaLlenadoFicha( EsaviContext ctx )
@@ -123,7 +127,10 @@ public final class EsaviProfile
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "fechaLlenadoFicha" ) );
 
-        return null;
+        item.addAnswer()
+            .setValue( new DateType( ctx.getCompletedDate() ) );
+
+        return item;
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaRepoNacional( EsaviContext ctx )
@@ -131,7 +138,10 @@ public final class EsaviProfile
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "fechaRepoNacional" ) );
 
-        return null;
+        item.addAnswer()
+            .setValue( new DateType( ctx.getCompletedDate() ) );
+
+        return item;
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent datosNotificacion( EsaviContext ctx )
