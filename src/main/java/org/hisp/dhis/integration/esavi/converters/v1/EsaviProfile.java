@@ -49,7 +49,7 @@ public final class EsaviProfile
         EsaviContext ctx = new EsaviContext( trackedEntity, dhisProperties );
 
         QuestionnaireResponse response = new QuestionnaireResponse();
-        response.setId( (String) trackedEntity.get("trackedEntityInstance") );
+        response.setId( trackedEntity.getTrackedEntity().get() );
         response.setAuthored( new Date() );
         response.setStatus( COMPLETED );
 
@@ -217,10 +217,12 @@ public final class EsaviProfile
         if ( ctx.hasDataElement( "Tgi4xP5DCzr" ) )
         {
             item.addAnswer()
-                    .setValue( EsaviProfession.get( ctx.dataElement( "Tgi4xP5DCzr" ) ) );
-        } else { // no data value for that DE, but there is default option in the IG
+                .setValue( EsaviProfession.get( ctx.dataElement( "Tgi4xP5DCzr" ) ) );
+        }
+        else
+        { // no data value for that DE, but there is default option in the IG
             item.addAnswer()
-                    .setValue( EsaviProfession.get(null) );
+                .setValue( EsaviProfession.get( null ) );
         }
 
         return item;

@@ -36,7 +36,6 @@ import org.apache.camel.component.fhir.internal.FhirConstants;
 import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
 import org.hisp.dhis.integration.esavi.config.properties.DhisProperties;
 import org.hisp.dhis.integration.esavi.converters.v1.EsaviProfile;
-import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntities;
 import org.hl7.fhir.r4.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,20 +48,17 @@ public class TrackedEntityToBundleConverter implements TypeConverters
     private final DhisProperties dhisProperties;
 
     @Converter
-    public Bundle teToBundle( TrackedEntities trackedEntities, Exchange exchange )
+    public Bundle teToBundle( TrackedEntity trackedEntity, Exchange exchange )
     {
         Bundle bundle = new Bundle().setType( Bundle.BundleType.BATCH );
 
-        for ( TrackedEntity trackedEntity : trackedEntities.getTrackedEntities() )
-        {
-            QuestionnaireResponse questionnaireResponse = EsaviProfile.create( trackedEntity, dhisProperties );
+        QuestionnaireResponse questionnaireResponse = EsaviProfile.create( trackedEntity, dhisProperties );
 
-            bundle.addEntry()
-                .setResource( questionnaireResponse )
-                .getRequest()
-                .setUrl( "QuestionnaireResponse?identifier=" + questionnaireResponse.getId() )
-                .setMethod( Bundle.HTTPVerb.PUT );
-        }
+        bundle.addEntry()
+            .setResource( questionnaireResponse )
+            .getRequest()
+            .setUrl( "QuestionnaireResponse?identifier=" + questionnaireResponse.getId() )
+            .setMethod( Bundle.HTTPVerb.PUT );
 
         exchange.getIn().setHeader( FhirConstants.PROPERTY_PREFIX + "bundle", bundle );
 

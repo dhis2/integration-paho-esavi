@@ -218,7 +218,8 @@ public class EsaviContext
                 try
                 {
                     completedDate = new SimpleDateFormat( "yyyy-MM-dd" ).format(
-                        new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS" ).parse( event.get( "completedDate" ) ) );
+                        new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS" ).parse(
+                            (String) event.getCompletedAt().get() ) );
                 }
                 catch ( ParseException e )
                 {
