@@ -4,18 +4,18 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.UseAdviceWith;
-import org.hisp.dhis.api.model.v2_38_1.Attribute__1;
-import org.hisp.dhis.api.model.v2_38_1.DataValue__2;
+import org.hisp.dhis.api.model.v2_38_1.Attribute__2;
+import org.hisp.dhis.api.model.v2_38_1.DataValue__3;
 import org.hisp.dhis.api.model.v2_38_1.DescriptiveWebMessage;
-import org.hisp.dhis.api.model.v2_38_1.Enrollment;
-import org.hisp.dhis.api.model.v2_38_1.Event;
+import org.hisp.dhis.api.model.v2_38_1.EnrollmentStatus;
+import org.hisp.dhis.api.model.v2_38_1.Enrollment__2;
 import org.hisp.dhis.api.model.v2_38_1.EventChart;
+import org.hisp.dhis.api.model.v2_38_1.Event__2;
 import org.hisp.dhis.api.model.v2_38_1.OrganisationUnit;
 import org.hisp.dhis.api.model.v2_38_1.OrganisationUnitLevel;
-import org.hisp.dhis.api.model.v2_38_1.TrackedEntityInstance;
+import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
 import org.hisp.dhis.api.model.v2_38_1.WebMessage;
 import org.hisp.dhis.integration.esavi.Application;
-import org.hisp.dhis.integration.esavi.converters.v1.EsaviContext;
 import org.hisp.dhis.integration.sdk.Dhis2ClientBuilder;
 import org.hisp.dhis.integration.sdk.api.Dhis2Client;
 import org.hisp.dhis.integration.sdk.internal.security.BasicCredentialsSecurityContext;
@@ -77,6 +77,8 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
 
     private static String dhis2Url;
 
+    private String trackedEntityId;
+
     private static PostgreSQLContainer<?> newPostgreSqlContainer()
     {
         return new PostgreSQLContainer<>( DockerImageName.parse( "postgis/postgis:12-3.3-alpine" )
@@ -131,34 +133,34 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
             createOrgUnitLevel( dhis2Client );
             addOrgUnitToUser( orgUnitId, ADMIN_USER_ID, dhis2Client );
             importMetaData( orgUnitId, dhis2Client );
-            createEnrollment( orgUnitId, dhis2Client );
+            trackedEntityId = createEnrollment( orgUnitId, dhis2Client );
 
             doBeforeEach = false;
         }
     }
 
-    private void createEnrollment( String orgUnitId, Dhis2Client dhis2Client )
+    private String createEnrollment( String orgUnitId, Dhis2Client dhis2Client )
         throws
         ParseException
     {
-        TrackedEntityInstance tei = new TrackedEntityInstance().withTrackedEntityInstance( "sFoa9o29JDe" )
+        TrackedEntity tei = new TrackedEntity()
             .withAttributes(
-                List.of( new Attribute__1().withAttribute( "KSr2yTdu1AI" ).withValue( "DEM_2023_11_09_000002" ),
-                    new Attribute__1().withAttribute( "oindugucx72" ).withValue( "1" ) ) )
+                List.of( new Attribute__2().withAttribute( "KSr2yTdu1AI" ).withValue( "DEM_2023_11_09_000002" ),
+                    new Attribute__2().withAttribute( "oindugucx72" ).withValue( "1" ) ) )
             .withEnrollments( List.of(
-                new Enrollment().withEnrollmentDate( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2022-01-19" ) )
+                new Enrollment__2().withEnrolledAt( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2022-01-19" ) )
                     .withProgram( "aFGRl00bzio" ).withOrgUnit( orgUnitId )
-                    .withStatus( Event.EnrollmentStatus.ACTIVE ).withEvents(
-                        List.of( new Event().withStatus( EventChart.EventStatus.COMPLETED )
-                            .withCompletedDate( "2023-11-13T16:04:26.573" )
+                    .withStatus( EnrollmentStatus.ACTIVE ).withEvents(
+                        List.of( new Event__2().withStatus( EventChart.EventStatus.COMPLETED )
+                            .withCompletedAt( "2023-11-13T16:04:26.573" )
                             .withProgramStage( esaviProgramStageId )
                             .withProgram( "aFGRl00bzio" ).withOrgUnit( orgUnitId ).withDataValues( List.of(
-                                new DataValue__2().withDataElement( "PW0dQpcY2wD" ).withValue( "2023-11-09" )
+                                new DataValue__3().withDataElement( "PW0dQpcY2wD" ).withValue( "2023-11-09" )
                                     .withProvidedElsewhere( false ) ) ) ) ) ) )
             .withOrgUnit( orgUnitId )
             .withTrackedEntityType( "bip5wHrcB0G" );
 
-        WebMessage webMessage = dhis2Client.post( "trackedEntityInstances" )
+        WebMessage webMessage = dhis2Client.post( "tracker" )
             .withResource( tei ).transfer().returnAs(
                 WebMessage.class );
 
@@ -166,6 +168,9 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
         {
             throw new RuntimeException();
         }
+
+        return (String) ((Map<String, Object>) webMessage.getResponse().get()).get( "id" );
+        //   ((List<Map<String, Object>>) ((Map<String, Object>)  webMessage.getResponse().get()).get( "importSummaries" )).get( 0 ).get( "reference" );
     }
 
     private void addOrgUnitToUser( String orgUnitId, String userId, Dhis2Client dhis2Client )
@@ -215,7 +220,7 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
     {
         camelContext.start();
         producerTemplate.requestBody(
-            String.format( "http://0.0.0.0:%s/fhir/baseR4/QuestionnaireResponse", serverPort ),
+            String.format( "http://0.0.0.0:%s/fhir/baseR4/QuestionnaireResponse/%s", serverPort, trackedEntityId ),
             null, String.class );
 
         assertThatJson( new String(

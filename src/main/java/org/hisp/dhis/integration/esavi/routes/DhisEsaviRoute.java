@@ -34,8 +34,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.hisp.dhis.api.model.v2_38_1.OptionSet;
+import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
 import org.hisp.dhis.integration.esavi.converters.v1.EsaviContext;
-import org.hisp.dhis.integration.esavi.domain.tracker.TrackedEntities;
 import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -73,29 +73,22 @@ public class DhisEsaviRoute extends RouteBuilder
             .process( ex -> EsaviContext.addOptionSet( ex.getIn().getBody( OptionSet.class ) ) );
 
         rest( "/" )
-            .get( "/QuestionnaireResponse" )
+            .get( "/QuestionnaireResponse/{trackedEntityId}" )
             .routeId( "get-esavi-cases" )
             .produces( MediaType.APPLICATION_JSON_VALUE )
             .to( "direct:fetch-esavi-cases" );
 
         from( "direct:fetch-esavi-cases" )
             .routeId( "Fetch-Esavi-Cases" )
-            .log( "Fetching ESAVI cases." )
-            .setHeader( "CamelDhis2.queryParams", () -> Map.of(
-                "program", "aFGRl00bzio",
-                "ouMode", "ACCESSIBLE",
-                "pageSize", "1",
-                // "trackedEntityInstance", "r79wSdGII3v",
-                "trackedEntityInstance", "sFoa9o29JDe", // exercise 1
-                // "trackedEntityInstance", "SURsjnlcPUY", // exercise 2
-                // "trackedEntityInstance", "qq2LGeKLql9", // exercise 3
-                "fields", "*,enrollments[events[*],*]" ) )
-            .to( "dhis2://get/resource?path=trackedEntityInstances&client=#dhis2Client" )
-            .to("file://./output?fileName=dhis2-payload.json&noop=true") // send to file
-            .unmarshal( getJacksonDataFormat( TrackedEntities.class, true ) )
-            .convertBodyTo( Bundle.class )
-            .marshal().fhirJson( "R4", true )
-            .to("file://./output?fileName=fhir-payload.json&noop=true"); // send to file
+            .setHeader( "CamelDhis2.queryParams")
+                .groovy( "['program': 'aFGRl00bzio', 'ouMode': 'ACCESSIBLE', 'pageSize': '1', 'trackedEntity': request.headers.get('trackedEntityId'), 'fields': '*,enrollments[events[*],*]']" )
+            .to( "dhis2://get/collection?path=tracker/trackedEntities&arrayName=instances&client=#dhis2Client" )
+            .split().body()
+                .convertBodyTo( TrackedEntity.class )
+                .convertBodyTo( Bundle.class )
+                .marshal().fhirJson( "R4", true )
+                .to("file://./output?fileName=fhir-payload.json&noop=true") // send to file
+            .end();
     }
 
     private static JacksonDataFormat getJacksonDataFormat( Class<?> klass, boolean prettyPrint )
