@@ -102,8 +102,6 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
 
     @BeforeAll
     public static void beforeAll()
-        throws
-        Exception
     {
         POSTGRESQL_CONTAINER = newPostgreSqlContainer();
         POSTGRESQL_CONTAINER.start();
@@ -143,8 +141,7 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
         throws
         ParseException
     {
-        TrackedEntity tei = new TrackedEntity()
-            .withAttributes(
+        TrackedEntity tei = new TrackedEntity().withAttributes(
                 List.of( new Attribute__2().withAttribute( "KSr2yTdu1AI" ).withValue( "DEM_2023_11_09_000002" ),
                     new Attribute__2().withAttribute( "oindugucx72" ).withValue( "1" ) ) )
             .withEnrollments( List.of(
@@ -152,7 +149,7 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
                     .withProgram( "aFGRl00bzio" ).withOrgUnit( orgUnitId )
                     .withStatus( EnrollmentStatus.ACTIVE ).withEvents(
                         List.of( new Event__2().withStatus( EventChart.EventStatus.COMPLETED )
-                            .withCompletedAt( "2023-11-13T16:04:26.573" )
+                            .withOccurredAt( "2023-11-13T16:04:26.573" )
                             .withProgramStage( esaviProgramStageId )
                             .withProgram( "aFGRl00bzio" ).withOrgUnit( orgUnitId ).withDataValues( List.of(
                                 new DataValue__3().withDataElement( "PW0dQpcY2wD" ).withValue( "2023-11-09" )
@@ -161,16 +158,17 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
             .withTrackedEntityType( "bip5wHrcB0G" );
 
         WebMessage webMessage = dhis2Client.post( "tracker" )
-            .withResource( tei ).transfer().returnAs(
-                WebMessage.class );
+            .withResource( Map.of( "trackedEntities", List.of( tei ) ) ).withParameter( "async", "false" )
+            .transfer().returnAs( WebMessage.class );
 
         if ( !webMessage.getStatus().get().equals( DescriptiveWebMessage.Status.OK ) )
         {
             throw new RuntimeException();
         }
 
-        return (String) ((Map<String, Object>) webMessage.getResponse().get()).get( "id" );
-        //   ((List<Map<String, Object>>) ((Map<String, Object>)  webMessage.getResponse().get()).get( "importSummaries" )).get( 0 ).get( "reference" );
+        return (String) ((List<Map<String, Object>>) ((Map<String, Map<String, Object>>) ((Map<String, Object>) webMessage.getAdditionalProperties()
+            .get( "bundleReport" )).get( "typeReportMap" )).get( "TRACKED_ENTITY" ).get( "objectReports" )).get( 0 )
+            .get( "uid" );
     }
 
     private void addOrgUnitToUser( String orgUnitId, String userId, Dhis2Client dhis2Client )
@@ -223,12 +221,9 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
             String.format( "http://0.0.0.0:%s/fhir/baseR4/QuestionnaireResponse/%s", serverPort, trackedEntityId ),
             null, String.class );
 
-        assertThatJson( new String(
-            Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream( "expected-fhir-payload.json" )
-                .readAllBytes(),
-            Charset.defaultCharset() ) ).whenIgnoringPaths( "entry[0].resource.authored",
-                "entry[0].resource.item[0].item[1].item[0].answer[0].valueDate" )
-            .isEqualTo( Files.readString( Paths.get( "output/fhir-payload.json" ) ) );
+        assertThatJson( Files.readString( Paths.get( "output/fhir-payload.json" ) ) ).isEqualTo(
+            new String(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream( "expected-fhir-payload.json" )
+                    .readAllBytes(), Charset.defaultCharset() ).replace( "<TRACKED_ENTITY_ID>", trackedEntityId ) );
     }
 }

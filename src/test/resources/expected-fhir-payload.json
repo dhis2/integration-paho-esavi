@@ -5,7 +5,7 @@
     {
       "resource": {
         "resourceType": "QuestionnaireResponse",
-        "id": "sFoa9o29JDe",
+        "id": "<TRACKED_ENTITY_ID>",
         "meta": {
           "profile": [
             "https://paho.org/fhir/esavi/StructureDefinition/ESAVIQuestionnaireResponse"
@@ -21,7 +21,7 @@
         },
         "questionnaire": "https://paho.org/fhir/esavi/Questionnaire/CuestionarioESAVI",
         "status": "completed",
-        "authored": "2023-11-13T17:04:27+01:00",
+        "authored": "${json-unit.ignore}",
         "item": [
           {
             "linkId": "datosNotificacionGeneral",
@@ -86,7 +86,7 @@
                     "linkId": "fechaNotificacion",
                     "answer": [
                       {
-                        "valueDate": "2023-11-13"
+                        "valueDate": "${json-unit.ignore}"
                       }
                     ]
                   },
@@ -94,7 +94,7 @@
                     "linkId": "fechaLlenadoFicha",
                     "answer": [
                       {
-                        "valueDate": "2023-11-13"
+                        "valueDate": "${json-unit.ignore}"
                       }
                     ]
                   },
@@ -102,7 +102,7 @@
                     "linkId": "fechaRepoNacional",
                     "answer": [
                       {
-                        "valueDate": "2023-11-13"
+                        "valueDate": "${json-unit.ignore}"
                       }
                     ]
                   }
@@ -190,7 +190,7 @@
       },
       "request": {
         "method": "PUT",
-        "url": "QuestionnaireResponse?identifier=sFoa9o29JDe"
+        "url": "QuestionnaireResponse?identifier=<TRACKED_ENTITY_ID>"
       }
     }
   ]
