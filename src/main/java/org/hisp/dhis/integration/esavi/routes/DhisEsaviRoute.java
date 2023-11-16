@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.processor.aggregate.UseLatestAggregationStrategy;
 import org.hisp.dhis.api.model.v2_38_1.OptionSet;
 import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
 import org.hisp.dhis.integration.esavi.converters.v1.EsaviContext;
@@ -61,7 +62,7 @@ public class DhisEsaviRoute extends RouteBuilder
             .setHeader( "CamelDhis2.queryParams", () -> Map.of(
                 "fields", "id,code,name,options[id,code,name]" ) )
             .to( "dhis2://get/resource?path=optionSets/PrAA7nJPXke&client=#dhis2Client" )
-            .unmarshal( getJacksonDataFormat( OptionSet.class, false ) )
+            .unmarshal().json( OptionSet.class )
             .process( ex -> EsaviContext.addOptionSet( ex.getIn().getBody( OptionSet.class ) ) );
 
         from( "direct:fetch-meddra" )
@@ -69,7 +70,7 @@ public class DhisEsaviRoute extends RouteBuilder
             .setHeader( "CamelDhis2.queryParams", () -> Map.of(
                 "fields", "id,code,name,options[id,code,name]" ) )
             .to( "dhis2://get/resource?path=optionSets/OzARj1D09Dm&client=#dhis2Client" )
-            .unmarshal( getJacksonDataFormat( OptionSet.class, false ) )
+            .unmarshal().json( OptionSet.class )
             .process( ex -> EsaviContext.addOptionSet( ex.getIn().getBody( OptionSet.class ) ) );
 
         rest( "/" )
@@ -83,12 +84,18 @@ public class DhisEsaviRoute extends RouteBuilder
             .setHeader( "CamelDhis2.queryParams")
                 .groovy( "['program': 'aFGRl00bzio', 'ouMode': 'ACCESSIBLE', 'pageSize': '1', 'trackedEntity': request.headers.get('trackedEntityId'), 'fields': '*,enrollments[events[*],*]']" )
             .to( "dhis2://get/collection?path=tracker/trackedEntities&arrayName=instances&client=#dhis2Client" )
-            .split().body()
+            .split(body()).aggregationStrategy( new UseLatestAggregationStrategy() )
+                .wireTap( "direct:log-dhis2-payload" )
                 .convertBodyTo( TrackedEntity.class )
                 .convertBodyTo( Bundle.class )
                 .marshal().fhirJson( "R4", true )
-                .to("file://./output?fileName=fhir-payload.json&noop=true") // send to file
+                .to("file://./output?fileName=fhir-payload.json&noop=true")
             .end();
+
+        from( "direct:log-dhis2-payload" )
+            .marshal( getJacksonDataFormat( Map.class, true ) )
+            .to( "file://./output?fileName=dhis2-payload.json&noop=true" );
+
     }
 
     private static JacksonDataFormat getJacksonDataFormat( Class<?> klass, boolean prettyPrint )

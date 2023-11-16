@@ -1,6 +1,7 @@
 package org.hisp.dhis.fhir.esavi.paho.routes;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.UseAdviceWith;
@@ -217,9 +218,14 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
         Exception
     {
         camelContext.start();
-        producerTemplate.requestBody(
+        String replyBody = producerTemplate.requestBody(
             String.format( "http://0.0.0.0:%s/fhir/baseR4/QuestionnaireResponse/%s", serverPort, trackedEntityId ),
             null, String.class );
+
+        assertThatJson( replyBody ).isEqualTo(
+            new String(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream( "expected-fhir-payload.json" )
+                    .readAllBytes(), Charset.defaultCharset() ).replace( "<TRACKED_ENTITY_ID>", trackedEntityId ) );
 
         assertThatJson( Files.readString( Paths.get( "output/fhir-payload.json" ) ) ).isEqualTo(
             new String(
