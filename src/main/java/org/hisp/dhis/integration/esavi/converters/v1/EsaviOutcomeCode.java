@@ -29,12 +29,12 @@ package org.hisp.dhis.integration.esavi.converters.v1;
 
 public enum EsaviOutcomeCode
 {
-    RECOVERING_OR_RESOLVING( "2", "En recuperación" ),
     RECOVERED_OR_RESOLVED( "1", "Recuperado Completamente" ),
-    RECOVERED_OR_RESOLVED_WITH_SEQUELAE( "4", "Recuperado con secuelas" ),
+    RECOVERING_OR_RESOLVING( "2", "En recuperación" ),
     NOT_RECOVERED_OR_NOT_RESOLVED( "3", "No recuperado" ),
-    UNKNOWN( "0", "Desconocido" ),
-    DIED( "5", "Muerte" );
+    RECOVERED_OR_RESOLVED_WITH_SEQUELAE( "4", "Recuperado con secuelas" ),
+    DIED( "5", "Muerte" ),
+    UNKNOWN( "0", "Desconocido" );
 
     private final String system = "https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceCS";
 
