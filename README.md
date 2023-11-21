@@ -33,3 +33,11 @@ After this, you can now run the facade with
 ```shell
 $ java -jar target/integration-paho-esavi.jar
 ```
+
+## Generate payload
+
+Go to your browser and access the URL `http://localhost:8080/fhir/baseR4/QuestionnaireResponse/{TEI_UID}`. The FHIR payload generated will be returned by the service as HTTP response.
+
+Also, a couple of files will be saved in the filesystem in the folder `output`:
+- `dhis2-payload.json`, that contains the json retrieved from the dhis2 instance
+- `fhir-payload.json`, that contains the json generated from the service
