@@ -1,0 +1,39 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "warning",
+      "code": "processing",
+      "details": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/java-core-messageId",
+            "code": "Questionnaire_QR_Q_NotFound"
+          }
+        ]
+      },
+      "diagnostics": "The questionnaire 'https://paho.org/fhir/esavi/Questionnaire/CuestionarioESAVI' could not be resolved, so no validation can be performed against the base questionnaire",
+      "location": [
+        "${json-unit.ignore}",
+        "Line 1, Col 589"
+      ]
+    },
+    {
+      "severity": "error",
+      "code": "processing",
+      "details": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/java-core-messageId",
+            "code": "VALIDATION_VAL_PROFILE_UNKNOWN_NOT_POLICY"
+          }
+        ]
+      },
+      "diagnostics": "Profile reference 'https://paho.org/fhir/esavi/StructureDefinition/ESAVIQuestionnaireResponse' has not been checked because it is unknown, and the validator is set to not fetch unknown profiles",
+      "location": [
+        "${json-unit.ignore}",
+        "Line 1, Col 2319"
+      ]
+    }
+  ]
+}

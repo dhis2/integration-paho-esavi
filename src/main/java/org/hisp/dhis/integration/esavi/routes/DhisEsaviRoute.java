@@ -27,10 +27,8 @@
  */
 package org.hisp.dhis.integration.esavi.routes;
 
-import java.util.Map;
-
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
-
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.processor.aggregate.UseLatestAggregationStrategy;
@@ -41,7 +39,7 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -79,7 +77,7 @@ public class DhisEsaviRoute extends RouteBuilder
             .produces( MediaType.APPLICATION_JSON_VALUE )
             .to( "direct:fetch-esavi-cases" );
 
-        from( "direct:fetch-esavi-cases" )
+        from( "direct:fetch-esavi-cases" ).noStreamCaching()
             .routeId( "Fetch-Esavi-Cases" )
             .setHeader( "CamelDhis2.queryParams")
                 .groovy( "['program': 'aFGRl00bzio', 'ouMode': 'ACCESSIBLE', 'pageSize': '1', 'trackedEntity': request.headers.get('trackedEntityId'), 'fields': '*,enrollments[events[*],*]']" )
@@ -88,14 +86,20 @@ public class DhisEsaviRoute extends RouteBuilder
                 .wireTap( "direct:log-dhis2-payload" )
                 .convertBodyTo( TrackedEntity.class )
                 .convertBodyTo( Bundle.class )
+                .wireTap( "direct:$validate" ).pattern( "InOut" )
                 .marshal().fhirJson( "R4", true )
-                .to("file://./output?fileName=fhir-payload.json&noop=true")
+                .to("file://./output?fileName=QuestionnaireResponse.fhir.json&noop=true")
             .end();
 
         from( "direct:log-dhis2-payload" )
             .marshal( getJacksonDataFormat( Map.class, true ) )
-            .to( "file://./output?fileName=dhis2-payload.json&noop=true" );
+            .to( "file://./output?fileName=TrackedEntity.dhis2.json&noop=true" );
 
+        from( "direct:$validate" )
+            .to( "fhir://validate/resource?inBody=resource&client=#fhirClient" )
+            .setBody(simple( "${body.operationOutcome}" ))
+            .marshal().fhirJson( "R4", true )
+            .to("file://./output?fileName=validate.fhir.json&noop=true");
     }
 
     private static JacksonDataFormat getJacksonDataFormat( Class<?> klass, boolean prettyPrint )
