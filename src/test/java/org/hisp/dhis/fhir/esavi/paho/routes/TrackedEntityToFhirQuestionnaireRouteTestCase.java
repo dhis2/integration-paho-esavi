@@ -60,6 +60,9 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
     @Container
     public static GenericContainer<?> DHIS2_CONTAINER;
 
+    @Container
+    public static GenericContainer<?> FHIR_CONTAINER;
+
     @Value( "${dhis2-to-esavi.dhis2.esavi-program-stage-id}" )
     protected String esaviProgramStageId;
 
@@ -101,6 +104,12 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
             .withEnv( "WAIT_FOR_DB_CONTAINER", "db" + ":" + 5432 + " -t 0" );
     }
 
+    private static GenericContainer<?> newFhirContainer()
+    {
+        return new GenericContainer<>( DockerImageName.parse( "hapiproject/hapi:v6.6.0" ) ).withExposedPorts( 8080 )
+            .waitingFor( new HttpWaitStrategy().forStatusCode( 200 ).withStartupTimeout( Duration.ofSeconds( 120 ) ) );
+    }
+
     @BeforeAll
     public static void beforeAll()
     {
@@ -108,12 +117,15 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
         POSTGRESQL_CONTAINER.start();
         DHIS2_CONTAINER = newDhis2Container( POSTGRESQL_CONTAINER );
         DHIS2_CONTAINER.start();
+        FHIR_CONTAINER = newFhirContainer();
+        FHIR_CONTAINER.start();
 
         dhis2Url = String.format( "http://localhost:%s/api", DHIS2_CONTAINER.getFirstMappedPort() );
 
         System.setProperty( "dhis2-to-esavi.dhis2.base-url", dhis2Url );
         System.setProperty( "dhis2-to-esavi.dhis2.username", "admin" );
         System.setProperty( "dhis2-to-esavi.dhis2.password", "district" );
+        System.setProperty( "dhis2-to-esavi.fhir.server-url", String.format( "http://localhost:%s/fhir", FHIR_CONTAINER.getFirstMappedPort() ) );
     }
 
     @BeforeEach
@@ -224,12 +236,17 @@ public class TrackedEntityToFhirQuestionnaireRouteTestCase
 
         assertThatJson( replyBody ).isEqualTo(
             new String(
-                Thread.currentThread().getContextClassLoader().getResourceAsStream( "expected-fhir-payload.json" )
+                Thread.currentThread().getContextClassLoader().getResourceAsStream( "expected-QuestionnaireResponse.fhir.json" )
                     .readAllBytes(), Charset.defaultCharset() ).replace( "<TRACKED_ENTITY_ID>", trackedEntityId ) );
 
-        assertThatJson( Files.readString( Paths.get( "output/fhir-payload.json" ) ) ).isEqualTo(
+        assertThatJson( Files.readString( Paths.get( "output/QuestionnaireResponse.fhir.json" ) ) ).isEqualTo(
             new String(
-                Thread.currentThread().getContextClassLoader().getResourceAsStream( "expected-fhir-payload.json" )
+                Thread.currentThread().getContextClassLoader().getResourceAsStream( "expected-QuestionnaireResponse.fhir.json" )
                     .readAllBytes(), Charset.defaultCharset() ).replace( "<TRACKED_ENTITY_ID>", trackedEntityId ) );
+
+        assertThatJson( Files.readString( Paths.get( "output/validate.fhir.json" ) ) ).isEqualTo(
+            new String(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream( "expected-validate.fhir.json" )
+                    .readAllBytes(), Charset.defaultCharset() ) );
     }
 }
