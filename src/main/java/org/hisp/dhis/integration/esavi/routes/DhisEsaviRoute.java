@@ -29,6 +29,7 @@ package org.hisp.dhis.integration.esavi.routes;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.processor.aggregate.UseLatestAggregationStrategy;
@@ -77,7 +78,7 @@ public class DhisEsaviRoute extends RouteBuilder
             .produces( MediaType.APPLICATION_JSON_VALUE )
             .to( "direct:fetch-esavi-cases" );
 
-        from( "direct:fetch-esavi-cases" ).noStreamCaching()
+        from( "direct:fetch-esavi-cases" )
             .routeId( "Fetch-Esavi-Cases" )
             .setHeader( "CamelDhis2.queryParams")
                 .groovy( "['program': 'aFGRl00bzio', 'ouMode': 'ACCESSIBLE', 'pageSize': '1', 'trackedEntity': request.headers.get('trackedEntityId'), 'fields': '*,enrollments[events[*],*]']" )
@@ -86,7 +87,7 @@ public class DhisEsaviRoute extends RouteBuilder
                 .wireTap( "direct:log-dhis2-payload" )
                 .convertBodyTo( TrackedEntity.class )
                 .convertBodyTo( Bundle.class )
-                .wireTap( "direct:$validate" ).pattern( "InOut" )
+                .to("direct:$validate")
                 .marshal().fhirJson( "R4", true )
                 .to("file://./output?fileName=QuestionnaireResponse.fhir.json&noop=true")
             .end();
@@ -96,10 +97,12 @@ public class DhisEsaviRoute extends RouteBuilder
             .to( "file://./output?fileName=TrackedEntity.dhis2.json&noop=true" );
 
         from( "direct:$validate" )
+            .setProperty( "questionnaireResponse", body() )
             .to( "fhir://validate/resource?inBody=resource&client=#fhirClient" )
-            .setBody(simple( "${body.operationOutcome}" ))
+            .setBody( simple( "${body.operationOutcome}" ) )
             .marshal().fhirJson( "R4", true )
-            .to("file://./output?fileName=validate.fhir.json&noop=true");
+            .to( "file://./output?fileName=validate.fhir.json&noop=true" )
+            .setBody( simple( "${exchangeProperty.questionnaireResponse}" ));
     }
 
     private static JacksonDataFormat getJacksonDataFormat( Class<?> klass, boolean prettyPrint )
