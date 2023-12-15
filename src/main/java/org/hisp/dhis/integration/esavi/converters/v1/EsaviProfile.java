@@ -70,6 +70,7 @@ public final class EsaviProfile
 
         response.addItem( datosNotificacionGeneral( ctx ) );
         response.addItem( patientDemographics( ctx ) );
+        response.addItem( medicalBackground( ctx ) );
         response.addItem( pharmaceuticalBackground( ctx ) );
         response.addItem( esaviRegistration( ctx ) );
 
@@ -354,6 +355,34 @@ public final class EsaviProfile
 
         return item;
     }
+
+    // ---------------------------------------------------------------------------------
+    // Esavi medicalBackground
+    // ---------------------------------------------------------------------------------
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent medicalBackground( EsaviContext ctx )
+    {
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "antecedentesMedicos" ) );
+
+        // ensayoClinico
+
+        // antecedentesEnfermedadesPrevias
+
+        // antecedentesEventosAdversos
+
+        // antecedentesSarsCov2
+
+        // pacienteEmbarazada
+
+        if (! item.hasItem())
+        {
+            return null;
+        }
+
+        return item;
+    }
+
 
     // ---------------------------------------------------------------------------------
     // Esavi Medicine
