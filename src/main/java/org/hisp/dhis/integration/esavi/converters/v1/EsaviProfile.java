@@ -370,6 +370,7 @@ public final class EsaviProfile
         // antecedentesEnfermedadesPrevias
 
         // antecedentesEventosAdversos
+        item.addItem( antecedentesEventosAdversos( ctx ) );
 
         // antecedentesSarsCov2
 
@@ -383,6 +384,44 @@ public final class EsaviProfile
         return item;
     }
 
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent antecedentesEventosAdversos(
+EsaviContext ctx)
+    {
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "antecedentesEventosAdversos" ) );
+
+        String EVENTO_SIMILAR = "IdCrdz34ZBK"; // ESAVI - Evento similar
+        if ( ctx.hasDataElement( EVENTO_SIMILAR) ) {
+            QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType( "antecedentesAdvSimilar" ) );
+            itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( EVENTO_SIMILAR ) ) );
+            item.addItem(itemInside);
+        }
+
+        String ALERGIA_MEDICAMENTOS = "rgVs3pWqzx2"; // ESAVI - Alergia Medicamentos
+        if ( ctx.hasDataElement( ALERGIA_MEDICAMENTOS) ) {
+            QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType( "alergiaMedicamentos" ) );
+            itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( ALERGIA_MEDICAMENTOS ) ) );
+            item.addItem(itemInside);
+        }
+
+        String ALERGIA_VACUNA = "CywpFDbxPqH"; // ESAVI - Alergia vacuna
+        if ( ctx.hasDataElement( ALERGIA_MEDICAMENTOS) ) {
+            QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType( "alergiaVacunas" ) );
+            itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( ALERGIA_VACUNA ) ) );
+            item.addItem(itemInside);
+        }
+
+        if (! item.hasItem())
+        {
+            return null;
+        }
+
+        return item;
+    }
 
     // ---------------------------------------------------------------------------------
     // Esavi Medicine
