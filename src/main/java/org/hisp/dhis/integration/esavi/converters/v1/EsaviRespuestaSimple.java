@@ -28,6 +28,7 @@
 package org.hisp.dhis.integration.esavi.converters.v1;
 
 import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.BooleanType;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -47,6 +48,21 @@ public class EsaviRespuestaSimple
             return new Coding( SYSTEM, "3", "No sabe" );
         default:
             return null;
+        }
+    }
+
+    public static BooleanType getBoolean( String value )
+    {
+        switch ( value )
+        {
+            case "1":
+                return new BooleanType(true);
+            case "2":
+                return new BooleanType(false);
+            case "3":
+                return null; // TODO mapping pending
+            default:
+                return null;
         }
     }
 

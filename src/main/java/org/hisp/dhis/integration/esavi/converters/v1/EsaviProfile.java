@@ -375,6 +375,7 @@ public final class EsaviProfile
         // antecedentesSarsCov2
 
         // pacienteEmbarazada
+        item.addItem( pacienteEmbarazada( ctx ) );
 
         if (! item.hasItem())
         {
@@ -412,6 +413,74 @@ EsaviContext ctx)
             QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                     new StringType( "alergiaVacunas" ) );
             itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( ALERGIA_VACUNA ) ) );
+            item.addItem(itemInside);
+        }
+
+        if (! item.hasItem())
+        {
+            return null;
+        }
+
+        return item;
+    }
+
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent pacienteEmbarazada(EsaviContext ctx) {
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "pacienteEmbarazada" ) );
+
+        // embarazadaMomentoVacuna
+        String ESTA_EMBARAZADA_VACUNA = "U19JzF3LjsS"; // ESAVI - Embarazada en la vacunación
+        if ( ctx.hasDataElement( ESTA_EMBARAZADA_VACUNA) ) {
+            BooleanType esta_embarazada_vacuna = EsaviRespuestaSimple.getBoolean( ctx.dataElement( ESTA_EMBARAZADA_VACUNA ) );
+            if (esta_embarazada_vacuna != null) {
+                QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                        new StringType("embarazadaMomentoVacuna"));
+                itemInside.addAnswer().setValue(esta_embarazada_vacuna);
+                item.addItem(itemInside);
+            }
+        }
+
+        // embarazadaMomentoESAVI
+        String ESTA_EMBARAZADA_ESAVI = "ZzoWAqln5xc"; // ESAVI - Embarazada al inicio ESAVI
+        if ( ctx.hasDataElement( ESTA_EMBARAZADA_ESAVI) ) {
+            BooleanType esta_embarazada_esavi = EsaviRespuestaSimple.getBoolean( ctx.dataElement( ESTA_EMBARAZADA_ESAVI ) );
+            if (esta_embarazada_esavi != null) {
+                QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                        new StringType("embarazadaMomentoESAVI"));
+                itemInside.addAnswer().setValue(esta_embarazada_esavi);
+                item.addItem(itemInside);
+            }
+        }
+
+        // fechaUltimaMenstruacion
+        String FECHA_ULTIMA_MENSTRUACION = "oCKpt0i7VeZ"; // ESAVI - Fecha última menstruación
+        if ( ctx.hasDataElement( FECHA_ULTIMA_MENSTRUACION) ) {
+            QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType("fechaUltimaMenstruacion"));
+            itemInside.addAnswer().setValue(new DateType(ctx.dataElement( FECHA_ULTIMA_MENSTRUACION )));
+            item.addItem(itemInside);
+        }
+
+        // fechaProbableParto
+        String FECHA_PROBABLE_PARTO = "mfGQRlcG7cc"; // ESAVI - Fecha probable de parto
+        if ( ctx.hasDataElement( FECHA_PROBABLE_PARTO) ) {
+            QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType("fechaProbableParto"));
+            itemInside.addAnswer().setValue(new DateType(ctx.dataElement( FECHA_PROBABLE_PARTO )));
+            item.addItem(itemInside);
+        }
+
+        // edadGestacional
+        // No mapping
+
+        // codigoMonitoreoPosteriorVacuna
+        String MONITOREO_POST_VACUNA = "Nl96399itF0"; // ESAVI - Seguimiento gestante
+        if ( ctx.hasDataElement( MONITOREO_POST_VACUNA) ) {
+            QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType("codigoMonitoreoPosteriorVacuna"));
+            itemInside.addAnswer().setValue(new BooleanType(ctx.dataElement( MONITOREO_POST_VACUNA )));
             item.addItem(itemInside);
         }
 
