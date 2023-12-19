@@ -959,6 +959,11 @@ EsaviContext ctx)
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviDescription( EsaviContext ctx,
         String description )
     {
+        if ( !ctx.hasDataElement( description ) )
+        {
+            return null;
+        }
+
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "descripcionESAVI" ) );
 
