@@ -373,6 +373,7 @@ public final class EsaviProfile
         item.addItem( antecedentesEventosAdversos( ctx ) );
 
         // antecedentesSarsCov2
+        item.addItem( antecedentesSarsCov2( ctx ) );
 
         // pacienteEmbarazada
         item.addItem( pacienteEmbarazada( ctx ) );
@@ -415,6 +416,41 @@ EsaviContext ctx)
             itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( ALERGIA_VACUNA ) ) );
             item.addItem(itemInside);
         }
+
+        if (! item.hasItem())
+        {
+            return null;
+        }
+
+        return item;
+    }
+
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent antecedentesSarsCov2(EsaviContext ctx) {
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "antecedentesSarsCov2" ) );
+
+        // diagnosticoprevioSarsCov2
+        String ANTECEDENTE_COVID = "XBU8oloqd7i"; // ESAVI - Antecedente COVID
+        if ( ctx.hasDataElement( ANTECEDENTE_COVID) ) {
+            QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType( "diagnosticoprevioSarsCov2" ) );
+            itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( ANTECEDENTE_COVID ) ) );
+            item.addItem(itemInside);
+        }
+
+        // asintomaticoSars
+        // No mapping
+
+        // fechaSintomasCovid19
+        // No mapping
+
+        // tipoConfirmacionCovid19
+        // No mapping
+
+        // fechaTomaMuestraCovid19
+        // No mapping
 
         if (! item.hasItem())
         {
