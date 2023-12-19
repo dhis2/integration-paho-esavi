@@ -366,8 +366,10 @@ public final class EsaviProfile
                 new StringType( "antecedentesMedicos" ) );
 
         // ensayoClinico
+        // No mapping
 
         // antecedentesEnfermedadesPrevias
+        item.addItem( antecedentesEnfermedadesPrevias( ctx ) );
 
         // antecedentesEventosAdversos
         item.addItem( antecedentesEventosAdversos( ctx ) );
@@ -385,6 +387,34 @@ public final class EsaviProfile
 
         return item;
     }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent antecedentesEnfermedadesPrevias(
+            EsaviContext ctx)
+    {
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "antecedentesEnfermedadesPrevias" ) );
+
+        String[] medical_history_uids = {"qefbRP79xOR", "AFZZf15RB9H", "IHAuvjbCaiq", "q5gX7VOf0LI", "j6J8gLoFePq", "Fm78gKjGygn", "ZKn2LDznlHd", "FUxdYjcINIh", "j9yee5ZTdyE"};
+        for (String medical_history : medical_history_uids)
+        {
+            if ( ctx.hasDataElement( medical_history) ) {
+                QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                        new StringType( "codigoMedDRAEnfPrevia" ) );
+                itemInside.addAnswer().setValue( EsaviMeddra.get(ctx.dataElement( medical_history ), ctx.option("OzARj1D09Dm", ctx.dataElement( medical_history )) ) );
+                item.addItem(itemInside);
+            }
+
+        }
+
+        if (! item.hasItem())
+        {
+            return null;
+        }
+
+        return item;
+    }
+
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent antecedentesEventosAdversos(
 EsaviContext ctx)
