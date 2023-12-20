@@ -583,6 +583,16 @@ EsaviContext ctx)
             new StringType( "antecedentesFarmacosVacunas" ) );
 
         // medicamento
+        item.addItem( medicamento( ctx, "YDhHKT2hE8j", "LaStdK115NF", "B9HiK1fADgK" ) );
+        item.addItem( medicamento( ctx, "YzZ5iOPzR6k", "cBKqulUmt9b", "FKgkFwKpjfu" ) );
+        item.addItem( medicamento( ctx, "i7ylwQssbZs", "wNzChKbsxd0", "QzkGC9PeXNe" ) );
+        item.addItem( medicamento( ctx, "xbrWBpcL7Mc", "kxFDJmHFX2j", "SznBvVkfQxc" ) );
+        item.addItem( medicamento( ctx, "CvJTcYvJxMX", "CMSNZVmLxGq", "pymdeJkXNWZ" ) );
+        item.addItem( medicamento( ctx, "j69skZQLxJR", "HFnr2nf6VC6", "mBJnveQPhMK" ) );
+        item.addItem( medicamento( ctx, "HAz2UIdgtPe", "aHFjm75ialS", "fgoMOIvotYF" ) );
+        item.addItem( medicamento( ctx, "lwSV5ilPBbQ", "rqg6Z6aOU20", "GqdK5VSSC0q" ) );
+        item.addItem( medicamento( ctx, "VidbwCnSw2X", "ZTlbQp6AUxR", "LI1ea2cTRNw" ) );
+        item.addItem( medicamento( ctx, "nKWV4cjQ9lR", "p7VnQrQyGEl", "eEmvhkIOSKm" ) );
 
         // datosVacunas
         item.addItem( vaccineDataAdministration( ctx, "uSVcZzSM3zg", "JSd0HQOgJ8w", "LIyV4t7eCfZ", "LNqkAlvGplL",
@@ -599,6 +609,118 @@ EsaviContext ctx)
         item.addItem( vaccineData( ctx, "g9PjywVj2fs", "VrzEutEnzSJ", "fZFQVZFqu0q", "xXjnT9sjt4F", "KTHsZhIAGWf" ) );
         item.addItem( vaccineData( ctx, "OU5klvkk3SM", "f4WCAVwjHz0", "VQKdZ1KeD7u", "fW6RbpJk4hS", "gG0FZYpEctJ" ) );
         item.addItem( vaccineData( ctx, "menOXwIFZh5", "H3TKHMFIN6V", "S1PRFSk8Y9v", "va0Smpy0LUn", "EDdd0HsfLcO" ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent medicamento( EsaviContext ctx,
+                                                                                         String medicamento_id, String formaFarmacetica, String viaAdministracion )
+    {
+        if ( !ctx.hasDataElement( medicamento_id ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "medicamento" ) );
+
+        // nombreMedicamento
+        item.addItem( medicamentoNombre( ctx, medicamento_id ) );
+
+        // sistemaDeCodificacionParaNombreNormalizadoMedicamento
+        // item.addItem( sistemaDeCodificacionParaNombreNormalizadoMedicamento( ctx ) );
+
+        // nombreNormalizadoMedicamento
+        // no mapping
+
+        // codigoMedicamento
+        item.addItem( medicamentoCodigo( ctx, medicamento_id ) );
+
+        // nombreFormaFarmaceutica
+        item.addItem( medicamentoFormaFarmaceutica( ctx, formaFarmacetica ) );
+
+        // codigoFormaFarmaceutica
+        // no mapping
+
+        // nombreViaAdministracion
+        item.addItem( medicamentoViaAdministracion( ctx, viaAdministracion ) );
+
+        // codigoViaAdministracion
+        // no mapping
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent medicamentoNombre(EsaviContext ctx, String id )
+    {
+        if ( !ctx.hasDataElement( id ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "nombreMedicamento" ) );
+
+        item.addAnswer().setValue( new StringType( ctx.option( "deNBd8tEIeD", ctx.dataElement( id ) ) ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent sistemaDeCodificacionParaNombreNormalizadoMedicamento(
+            EsaviContext ctx )
+    {
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "sistemaDeCodificacionParaNombreNormalizadoMedicamento" ) );
+
+        item.addAnswer()
+                .setValue(
+                        new Coding( "https://paho.org/fhir/esavi/CodeSystem/SistemasDeCodificacionCS", "2", "WHODrug" ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent medicamentoCodigo(EsaviContext ctx, String id )
+    {
+        if ( !ctx.hasDataElement( id ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "codigoMedicamento" ) );
+
+        String display = ctx.option( "deNBd8tEIeD", ctx.dataElement( id ) );
+        item.addAnswer().setValue(EsaviWhoDrug.get(ctx.dataElement( id ), display));
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent medicamentoFormaFarmaceutica(EsaviContext ctx, String id )
+    {
+        if ( !ctx.hasDataElement( id ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "nombreFormaFarmaceutica" ) );
+
+        item.addAnswer().setValue( new StringType( ctx.option( "qRyur64ZaPK", ctx.dataElement( id ) ) ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent medicamentoViaAdministracion(EsaviContext ctx, String id )
+    {
+        if ( !ctx.hasDataElement( id ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "nombreViaAdministracion" ) );
+
+        item.addAnswer().setValue( new StringType( ctx.option( "E9d1xL5jsTJ", ctx.dataElement( id ) ) ) );
 
         return item;
     }
@@ -621,12 +743,6 @@ EsaviContext ctx)
         item.addItem( vaccineDataAdministrationBatch( ctx, batch ) );
         item.addItem( vaccineDataAdministrationExpiryDate( ctx, expiryDate ) );
 
-        // move to medicine
-        // item.addItem( vaccineDataAdministrationCode( ctx, id ) );
-
-        // move to medicine, invalid option
-        // item.addItem( vaccineDataAdministrationSystemWhoDrug( ctx ) );
-
         return item;
     }
 
@@ -643,24 +759,6 @@ EsaviContext ctx)
 
         item.addAnswer()
             .setValue( new StringType( ctx.option( "PrAA7nJPXke", ctx.dataElement( id ), id ) ) );
-
-        return item;
-    }
-
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministrationCode(
-        EsaviContext ctx, String id )
-    {
-        if ( !ctx.hasDataElement( id ) )
-        {
-            return null;
-        }
-
-        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "codigoMedicamento" ) );
-
-        item.addAnswer()
-            .setValue( new Coding( "https://paho.org/fhir/esavi/ValueSet/CodigoMedicamentoVS",
-                ctx.dataElement( id ), ctx.option( "PrAA7nJPXke", ctx.dataElement( id ), id ) ) );
 
         return item;
     }
@@ -694,19 +792,6 @@ EsaviContext ctx)
 
         item.addAnswer()
             .setValue( new IntegerType( value ) );
-
-        return item;
-    }
-
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministrationSystemWhoDrug(
-        EsaviContext ctx )
-    {
-        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "sistemaDeCodificacionParaNombreNormalizadoMedicamento" ) );
-
-        item.addAnswer()
-            .setValue(
-                new Coding( "https://paho.org/fhir/esavi/CodeSystem/SistemasDeCodificacionCS", "2", "WHODrug" ) );
 
         return item;
     }

@@ -52,12 +52,39 @@ public class DhisEsaviRoute extends RouteBuilder
     {
         from( "timer:foo?repeatCount=1" )
             .routeId( "DHIS2-to-ESAVI-FHIR" )
+            .to( "direct:fetch-drug-form" )
+            .to( "direct:fetch-drug-route" )
             .to( "direct:fetch-whodrug" )
+            .to( "direct:fetch-whodrug-vaccines" )
             .to( "direct:fetch-meddra" )
             .log( "Preload done." );
 
+        from( "direct:fetch-drug-form" )
+                .routeId( "Fetch-Drug-Form" )
+                .setHeader( "CamelDhis2.queryParams", () -> Map.of(
+                        "fields", "id,code,name,options[id,code,name]" ) )
+                .to( "dhis2://get/resource?path=optionSets/qRyur64ZaPK&client=#dhis2Client" )
+                .unmarshal().json( OptionSet.class )
+                .process( ex -> EsaviContext.addOptionSet( ex.getIn().getBody( OptionSet.class ) ) );
+
+        from( "direct:fetch-drug-route" )
+                .routeId( "Fetch-Drug-Route" )
+                .setHeader( "CamelDhis2.queryParams", () -> Map.of(
+                        "fields", "id,code,name,options[id,code,name]" ) )
+                .to( "dhis2://get/resource?path=optionSets/E9d1xL5jsTJ&client=#dhis2Client" )
+                .unmarshal().json( OptionSet.class )
+                .process( ex -> EsaviContext.addOptionSet( ex.getIn().getBody( OptionSet.class ) ) );
+
         from( "direct:fetch-whodrug" )
             .routeId( "Fetch-WHODrug" )
+            .setHeader( "CamelDhis2.queryParams", () -> Map.of(
+                    "fields", "id,code,name,options[id,code,name]" ) )
+            .to( "dhis2://get/resource?path=optionSets/deNBd8tEIeD&client=#dhis2Client" )
+            .unmarshal().json( OptionSet.class )
+            .process( ex -> EsaviContext.addOptionSet( ex.getIn().getBody( OptionSet.class ) ) );
+
+        from( "direct:fetch-whodrug-vaccines" )
+            .routeId( "Fetch-WHODrug-Vaccines" )
             .setHeader( "CamelDhis2.queryParams", () -> Map.of(
                 "fields", "id,code,name,options[id,code,name]" ) )
             .to( "dhis2://get/resource?path=optionSets/PrAA7nJPXke&client=#dhis2Client" )
