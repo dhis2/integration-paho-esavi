@@ -931,9 +931,7 @@ EsaviContext ctx)
 
         String display = ctx.option( "OzARj1D09Dm", ctx.dataElement( id ), "" );
 
-        item.addAnswer()
-            .setValue(
-                new Coding( "https://paho.org/fhir/esavi/CodeSystem/MedDRACS", ctx.dataElement( id ), display ) );
+        item.addAnswer().setValue(EsaviMeddra.get(ctx.dataElement( id ), display));
 
         return item;
     }
