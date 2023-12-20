@@ -34,7 +34,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 public class EsaviRespuestaSimple
 {
-    private static String SYSTEM = "https://paho.org/fhir/esavi/ValueSet/RespuestaSiNoNosabeVS";
+    private static String SYSTEM = "https://paho.org/esavi/CodeSystem/RespuestaSiNoNosabeCS";
 
     public static Coding get( String value )
     {

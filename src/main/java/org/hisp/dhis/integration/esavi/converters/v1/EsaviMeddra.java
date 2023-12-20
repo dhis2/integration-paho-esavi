@@ -31,7 +31,7 @@ import org.hl7.fhir.r4.model.Coding;
 
 public class EsaviMeddra
 {
-    private static String SYSTEM = "https://paho.org/fhir/esavi/ValueSet/CodigoMedDRAEnfPreviaVS";
+    private static String SYSTEM = "https://paho.org/esavi/CodeSystem/EsaviMedDRACS";
 
     public static Coding get( String code, String display )
     {
