@@ -114,6 +114,11 @@ public final class EsaviProfile
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaNotificacion( EsaviContext ctx )
     {
+        if ( ctx.getCompletedDate() == null)
+        {
+            return null;
+        }
+
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "fechaNotificacion" ) );
 
@@ -125,6 +130,11 @@ public final class EsaviProfile
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaLlenadoFicha( EsaviContext ctx )
     {
+        if ( ctx.getCompletedDate() == null)
+        {
+            return null;
+        }
+
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "fechaLlenadoFicha" ) );
 
@@ -136,6 +146,11 @@ public final class EsaviProfile
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaRepoNacional( EsaviContext ctx )
     {
+        if ( ctx.getCompletedDate() == null)
+        {
+            return null;
+        }
+
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "fechaRepoNacional" ) );
 
