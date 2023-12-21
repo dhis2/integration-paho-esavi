@@ -44,7 +44,10 @@ import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 public final class EsaviProfile
 {
 
-    public static QuestionnaireResponse create( TrackedEntity trackedEntity, DhisProperties dhisProperties )
+    public static final String OPTIONSET_WHODRUG_COVID = "PrAA7nJPXke";
+    public static final String OPTIONSET_MEDDRA = "OzARj1D09Dm";
+
+    public static QuestionnaireResponse create(TrackedEntity trackedEntity, DhisProperties dhisProperties )
     {
         EsaviContext ctx = new EsaviContext( trackedEntity, dhisProperties );
 
@@ -416,7 +419,7 @@ public final class EsaviProfile
             if ( ctx.hasDataElement( medical_history) ) {
                 QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                         new StringType( "codigoMedDRAEnfPrevia" ) );
-                itemInside.addAnswer().setValue( EsaviMeddra.get(ctx.dataElement( medical_history ), ctx.option("OzARj1D09Dm", ctx.dataElement( medical_history )) ) );
+                itemInside.addAnswer().setValue( EsaviMeddra.get(ctx.dataElement( medical_history ), ctx.option(OPTIONSET_MEDDRA, ctx.dataElement( medical_history )) ) );
                 item.addItem(itemInside);
             }
 
@@ -806,7 +809,7 @@ EsaviContext ctx)
             new StringType( "nombreVacuna" ) );
 
         item.addAnswer()
-            .setValue( new StringType( ctx.option( "PrAA7nJPXke", ctx.dataElement( id ), id ) ) );
+            .setValue( new StringType( ctx.option(OPTIONSET_WHODRUG_COVID, ctx.dataElement( id ), id ) ) );
 
         return item;
     }
@@ -1008,7 +1011,7 @@ EsaviContext ctx)
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviName( EsaviContext ctx, String id )
     {
-        if ( !ctx.hasDataElement( id ) || !ctx.hasOption( "OzARj1D09Dm", ctx.dataElement( id ) ) )
+        if ( !ctx.hasDataElement( id ) || !ctx.hasOption(OPTIONSET_MEDDRA, ctx.dataElement( id ) ) )
         {
             return null;
         }
@@ -1016,7 +1019,7 @@ EsaviContext ctx)
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "nombreESAVI" ) );
 
-        item.addAnswer().setValue( new StringType( ctx.option( "OzARj1D09Dm", ctx.dataElement( id ) ) ) );
+        item.addAnswer().setValue( new StringType( ctx.option(OPTIONSET_MEDDRA, ctx.dataElement( id ) ) ) );
 
         return item;
     }
@@ -1043,7 +1046,7 @@ EsaviContext ctx)
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "codigoESAVIMedDRA" ) );
 
-        String display = ctx.option( "OzARj1D09Dm", ctx.dataElement( id ), "" );
+        String display = ctx.option(OPTIONSET_MEDDRA, ctx.dataElement( id ), "" );
 
         item.addAnswer().setValue(EsaviMeddra.get(ctx.dataElement( id ), display));
 
