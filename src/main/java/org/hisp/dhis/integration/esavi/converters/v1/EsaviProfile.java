@@ -596,19 +596,13 @@ EsaviContext ctx)
 
         // datosVacunas
         item.addItem( vaccineDataAdministration( ctx, "uSVcZzSM3zg", "JSd0HQOgJ8w", "LIyV4t7eCfZ", "LNqkAlvGplL",
-            "VFrc8SNFYm7" ) );
+            "VFrc8SNFYm7", "dOkuCjpD978", "BSUncNBb20j", "om7AsREDduc", "zIKVrYHtdUx" ) );
         item.addItem( vaccineDataAdministration( ctx, "g9PjywVj2fs", "eRwc8Y0CNLh", "E3F414izniN", "b1rSwGRcY5W",
-            "rVUo2PBgwhr" ) );
+            "rVUo2PBgwhr", "VrzEutEnzSJ", "fZFQVZFqu0q", "xXjnT9sjt4F", "KTHsZhIAGWf" ) );
         item.addItem( vaccineDataAdministration( ctx, "OU5klvkk3SM", "wdZrkUvnuyr", "WlE0K4xCc14", "YBnFoNouH6f",
-            "ffYfdSPmM1W" ) );
+            "ffYfdSPmM1W", "f4WCAVwjHz0", "VQKdZ1KeD7u", "fW6RbpJk4hS", "gG0FZYpEctJ" ) );
         item.addItem( vaccineDataAdministration( ctx, "menOXwIFZh5", "Ptms0lmt4QX", "Aya8C25DXHe", "BHAfwo6JPDa",
-            "ZfjyIKeX1AN" ) );
-
-        // datosVacunacion
-        item.addItem( vaccineData( ctx, "uSVcZzSM3zg", "dOkuCjpD978", "BSUncNBb20j", "om7AsREDduc", "zIKVrYHtdUx" ) );
-        item.addItem( vaccineData( ctx, "g9PjywVj2fs", "VrzEutEnzSJ", "fZFQVZFqu0q", "xXjnT9sjt4F", "KTHsZhIAGWf" ) );
-        item.addItem( vaccineData( ctx, "OU5klvkk3SM", "f4WCAVwjHz0", "VQKdZ1KeD7u", "fW6RbpJk4hS", "gG0FZYpEctJ" ) );
-        item.addItem( vaccineData( ctx, "menOXwIFZh5", "H3TKHMFIN6V", "S1PRFSk8Y9v", "va0Smpy0LUn", "EDdd0HsfLcO" ) );
+            "ZfjyIKeX1AN", "H3TKHMFIN6V", "S1PRFSk8Y9v", "va0Smpy0LUn", "EDdd0HsfLcO" ) );
 
         return item;
     }
@@ -726,7 +720,7 @@ EsaviContext ctx)
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministration( EsaviContext ctx,
-        String id, String brandName, String doses, String batch, String expiryDate )
+        String id, String brandName, String doses, String batch, String expiryDate, String vaccineDate, String vaccineTime, String reconstitutionDate, String reconstitutionTime)
     {
         if ( !ctx.hasDataElement( id ) )
         {
@@ -736,12 +730,31 @@ EsaviContext ctx)
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "datosVacunas" ) );
 
+        // nombreVacuna
         item.addItem( vaccineDataAdministrationName( ctx, id ) );
+
+        // sistemaDeCodificacionParaNombreNormalizadoVacuna
+        // no mapping
+
+        // nombreFabricante
         item.addItem( vaccineDataAdministrationBrandName( ctx, brandName ) );
+
         item.addItem( vaccineDataAdministrationIdentifier( ctx, id ) );
         item.addItem( vaccineDataAdministrationDoses( ctx, doses ) );
         item.addItem( vaccineDataAdministrationBatch( ctx, batch ) );
         item.addItem( vaccineDataAdministrationExpiryDate( ctx, expiryDate ) );
+
+        // nombreVacunatorio
+        item.addItem( vaccineDataVaccinationSite( ctx, id ) );
+
+        // fechaVacunacion
+        item.addItem( vaccineDataDate( ctx, vaccineDate ) );
+
+        // horaVacunacion
+        item.addItem( vaccineDataTime( ctx, vaccineTime ) );
+
+        // nombreDireccionVacunatorio
+        item.addItem( vaccineDataAddress( ctx ) );
 
         return item;
     }
@@ -844,25 +857,6 @@ EsaviContext ctx)
 
         item.addAnswer()
             .setValue( new DateType( ctx.dataElement( expiryDate ) ) );
-
-        return item;
-    }
-
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineData( EsaviContext ctx,
-        String id, String vaccineDate, String vaccineTime, String reconstitutionDate, String reconstitutionTime )
-    {
-        if ( !ctx.hasDataElement( id ) )
-        {
-            return null;
-        }
-
-        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "datosVacunacion" ) );
-
-        item.addItem( vaccineDataVaccinationSite( ctx, id ) );
-        item.addItem( vaccineDataDate( ctx, vaccineDate ) );
-        item.addItem( vaccineDataTime( ctx, vaccineTime ) );
-        item.addItem( vaccineDataAddress( ctx ) );
 
         return item;
     }
