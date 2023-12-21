@@ -1088,6 +1088,7 @@ EsaviContext ctx)
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "registroESAVI" ) );
 
+        // datosESAVI
         item.addItem( esaviData( ctx, "PZxZirhNzgS", "1", "LYariSd5cEq", "mqCTfs4jXSo", "ci3S3BH6wZn" ) );
         item.addItem( esaviData( ctx, "maY0Vi68Fv9", "2", "hfdzpv7lP6C", "hc15z2mXm2o", "ci3S3BH6wZn" ) );
         item.addItem( esaviData( ctx, "Sy1uqYvgR3r", "3", "oHVQ23x5NQE", "DBV8wfaQCMt", "ci3S3BH6wZn" ) );
@@ -1095,9 +1096,18 @@ EsaviContext ctx)
         item.addItem( esaviData( ctx, "vqf60JfNqsf", "5", "QeXeXYdBAUE", "XQjZ1N8dNkt", "ci3S3BH6wZn" ) );
         item.addItem( esaviData( ctx, "pQJc4VA2SDW", "6", "MfgJjmoOdxm", "kDgoKxw8sVJ", "ci3S3BH6wZn" ) );
 
+
+        // ESAVIDuranteEmbarazo
+        item.addItem( esaviDuringPregnancy (ctx));
+
+        // gravedadESAVI
         item.addItem( esaviSeriousness( ctx ) );
+
+        // desenlaceESAVI
         item.addItem( esaviOutcome( ctx ) );
 
+        // causalidadESAVI
+        // no mapping yet
         return item;
     }
 
@@ -1226,6 +1236,37 @@ EsaviContext ctx)
 
         item.addAnswer()
             .setValue( new StringType( ctx.dataElement( description ) ) );
+
+        return item;
+    }
+
+    // ---------------------------------------------------------------------------------
+    // ESAVI Seriousness
+    // ---------------------------------------------------------------------------------
+
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviDuringPregnancy(
+            EsaviContext ctx )
+    {
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "ESAVIDuranteEmbarazo" ) );
+
+        // codigoTipoComplicacionESAVI
+        // TODO no mapping yet
+
+        String DESCRIPTION_COMPLICATIONS_PREGNACY = "M8T2c8RJFUA";
+        if ( ctx.hasDataElement( DESCRIPTION_COMPLICATIONS_PREGNACY ) )
+        {
+            QuestionnaireResponse.QuestionnaireResponseItemComponent internal_item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType( "nombreComplicacionEmbarazoESAVI" ) );
+            internal_item.addAnswer().setValue( new StringType( ctx.dataElement( DESCRIPTION_COMPLICATIONS_PREGNACY ) ) );
+            item.addItem(internal_item);
+        }
+
+        if (! item.hasItem())
+        {
+            return null;
+        }
 
         return item;
     }
