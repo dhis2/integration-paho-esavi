@@ -46,6 +46,7 @@ public final class EsaviProfile
 
     public static final String OPTIONSET_WHODRUG_COVID = "PrAA7nJPXke";
     public static final String OPTIONSET_MEDDRA = "OzARj1D09Dm";
+    public static final String OPTIONSET_DILUENTS = "NdEeGMVaObK";
 
     public static QuestionnaireResponse create(TrackedEntity trackedEntity, DhisProperties dhisProperties )
     {
@@ -599,13 +600,13 @@ EsaviContext ctx)
 
         // datosVacunas
         item.addItem( vaccineDataAdministration( ctx, "uSVcZzSM3zg", "JSd0HQOgJ8w", "LIyV4t7eCfZ", "LNqkAlvGplL",
-            "VFrc8SNFYm7", "dOkuCjpD978", "BSUncNBb20j", "om7AsREDduc", "zIKVrYHtdUx" ) );
+            "VFrc8SNFYm7", "dOkuCjpD978", "BSUncNBb20j", "om7AsREDduc", "zIKVrYHtdUx", "xk9QvZPMVQF", "FQM2ksIQix8", "cKx0VCmLrsc" ) );
         item.addItem( vaccineDataAdministration( ctx, "g9PjywVj2fs", "eRwc8Y0CNLh", "E3F414izniN", "b1rSwGRcY5W",
-            "rVUo2PBgwhr", "VrzEutEnzSJ", "fZFQVZFqu0q", "xXjnT9sjt4F", "KTHsZhIAGWf" ) );
+            "rVUo2PBgwhr", "VrzEutEnzSJ", "fZFQVZFqu0q", "xXjnT9sjt4F", "KTHsZhIAGWf", "WN8844HG0zi", "ufWU3WStZgG", "FcqNLPNUPId" ) );
         item.addItem( vaccineDataAdministration( ctx, "OU5klvkk3SM", "wdZrkUvnuyr", "WlE0K4xCc14", "YBnFoNouH6f",
-            "ffYfdSPmM1W", "f4WCAVwjHz0", "VQKdZ1KeD7u", "fW6RbpJk4hS", "gG0FZYpEctJ" ) );
+            "ffYfdSPmM1W", "f4WCAVwjHz0", "VQKdZ1KeD7u", "fW6RbpJk4hS", "gG0FZYpEctJ", "pLu0luPWikb", "MLP8fi1X7UX", "MGjnXmtmd7l" ) );
         item.addItem( vaccineDataAdministration( ctx, "menOXwIFZh5", "Ptms0lmt4QX", "Aya8C25DXHe", "BHAfwo6JPDa",
-            "ZfjyIKeX1AN", "H3TKHMFIN6V", "S1PRFSk8Y9v", "va0Smpy0LUn", "EDdd0HsfLcO" ) );
+            "ZfjyIKeX1AN", "H3TKHMFIN6V", "S1PRFSk8Y9v", "va0Smpy0LUn", "EDdd0HsfLcO", "ZTyN8vSf7bc", "MyWtDaOdlyD", "qhDonTAIjl0" ) );
 
         return item;
     }
@@ -723,7 +724,7 @@ EsaviContext ctx)
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministration( EsaviContext ctx,
-        String id, String manufacturername, String doses, String batch, String expiryDate, String vaccineDate, String vaccineTime, String reconstitutionDate, String reconstitutionTime)
+        String id, String manufacturerName, String doses, String batch, String expiryDate, String vaccineDate, String vaccineTime, String reconstitutionDate, String reconstitutionTime, String diluentName, String diluentBatch, String diluentExpiryDate)
     {
         if ( !ctx.hasDataElement( id ) )
         {
@@ -754,7 +755,7 @@ EsaviContext ctx)
         // no mapping
 
         // nombreFabricante
-        item.addItem( vaccineDataAdministrationManufacturerName( ctx, manufacturername ) );
+        item.addItem( vaccineDataAdministrationManufacturerName( ctx, manufacturerName ) );
 
         // codigoFabricanteWHODrug
         // no mapping
@@ -769,8 +770,13 @@ EsaviContext ctx)
         item.addItem( vaccineDataAdministrationExpiryDate( ctx, expiryDate ) );
 
         // nombreDiluyenteVacuna
+        item.addItem( vaccineDataAdministrationDiluentName( ctx, diluentName ) );
+
         // numeroLoteDiluyente
+        item.addItem( vaccineDataAdministrationDiluentBatch( ctx, diluentBatch ) );
+
         // fechaVencimientoDiluyente
+        item.addItem( vaccineDataAdministrationDiluentExpiryDate( ctx, diluentExpiryDate ) );
 
         // nombreVacunatorio
         item.addItem( vaccineDataVaccinationSite( ctx, id ) );
@@ -896,6 +902,56 @@ EsaviContext ctx)
 
         item.addAnswer()
             .setValue( new StringType( ctx.dataElement( batch ) ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministrationDiluentName(
+            EsaviContext ctx, String diluentName )
+    {
+        if ( !ctx.hasDataElement( diluentName ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "nombreDiluyenteVacuna" ) );
+
+        String display = ctx.option(OPTIONSET_DILUENTS, ctx.dataElement( diluentName ) );
+        item.addAnswer().setValue( new StringType( display ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministrationDiluentBatch(
+            EsaviContext ctx, String batch )
+    {
+        if ( !ctx.hasDataElement( batch ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "numeroLoteDiluyente" ) );
+
+        item.addAnswer().setValue( new StringType( ctx.dataElement( batch ) ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministrationDiluentExpiryDate(
+            EsaviContext ctx,
+            String expiryDate )
+    {
+        if ( !ctx.hasDataElement( expiryDate ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "fechaVencimientoDiluyente" ) );
+
+        item.addAnswer().setValue( new DateType( ctx.dataElement( expiryDate ) ) );
 
         return item;
     }

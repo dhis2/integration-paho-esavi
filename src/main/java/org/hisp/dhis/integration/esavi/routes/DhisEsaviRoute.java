@@ -54,6 +54,7 @@ public class DhisEsaviRoute extends RouteBuilder
             .routeId( "DHIS2-to-ESAVI-FHIR" )
             .to( "direct:fetch-drug-form" )
             .to( "direct:fetch-drug-route" )
+            .to( "direct:fetch-diluent" )
             .to( "direct:fetch-whodrug" )
             .to( "direct:fetch-whodrug-vaccines" )
             .to( "direct:fetch-meddra" )
@@ -72,6 +73,14 @@ public class DhisEsaviRoute extends RouteBuilder
                 .setHeader( "CamelDhis2.queryParams", () -> Map.of(
                         "fields", "id,code,name,options[id,code,name]" ) )
                 .to( "dhis2://get/resource?path=optionSets/E9d1xL5jsTJ&client=#dhis2Client" )
+                .unmarshal().json( OptionSet.class )
+                .process( ex -> EsaviContext.addOptionSet( ex.getIn().getBody( OptionSet.class ) ) );
+
+        from( "direct:fetch-diluent" )
+                .routeId( "Fetch-Diluent" )
+                .setHeader( "CamelDhis2.queryParams", () -> Map.of(
+                        "fields", "id,code,name,options[id,code,name]" ) )
+                .to( "dhis2://get/resource?path=optionSets/NdEeGMVaObK&client=#dhis2Client" )
                 .unmarshal().json( OptionSet.class )
                 .process( ex -> EsaviContext.addOptionSet( ex.getIn().getBody( OptionSet.class ) ) );
 
