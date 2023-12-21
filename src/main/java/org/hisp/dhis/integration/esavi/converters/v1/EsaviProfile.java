@@ -723,7 +723,7 @@ EsaviContext ctx)
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministration( EsaviContext ctx,
-        String id, String brandName, String doses, String batch, String expiryDate, String vaccineDate, String vaccineTime, String reconstitutionDate, String reconstitutionTime)
+        String id, String manufacturername, String doses, String batch, String expiryDate, String vaccineDate, String vaccineTime, String reconstitutionDate, String reconstitutionTime)
     {
         if ( !ctx.hasDataElement( id ) )
         {
@@ -740,7 +740,7 @@ EsaviContext ctx)
         // no mapping
 
         // nombreNormalizadoVacuna
-        item.addItem( vaccineDataAdministrationBrandName( ctx, brandName ) );
+        item.addItem( vaccineDataAdministrationManufacturerName( ctx, manufacturername ) );
 
         // identificadorVacuna
         // item.addItem( vaccineDataAdministrationIdentifier( ctx, id ) );
@@ -815,7 +815,7 @@ EsaviContext ctx)
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministrationBrandName(
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministrationManufacturerName(
         EsaviContext ctx, String brandName )
     {
         if ( !ctx.hasDataElement( brandName ) )
