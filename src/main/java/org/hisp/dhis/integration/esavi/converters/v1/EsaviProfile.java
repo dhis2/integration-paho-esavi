@@ -1112,11 +1112,25 @@ EsaviContext ctx)
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "datosESAVI" ) );
 
+        // nombreESAVI
         item.addItem( esaviName( ctx, id ) );
+
+        // IdentificadorESAVI
         item.addItem( esaviPosition( ctx, position ) );
+
+        // codigoESAVIMedDRA
         item.addItem( esaviMeddraCode( ctx, id ) );
+
+        // codigoESAVIOtro
+        // No mapping
+
+        // fechaESAVI
         item.addItem( esaviStartDate( ctx, startDate ) );
+
+        // horaESAVI
         item.addItem( esaviStartTime( ctx, startTime ) );
+
+        // descripcionESAVI
         item.addItem( esaviDescription( ctx, description ) );
 
         return item;
