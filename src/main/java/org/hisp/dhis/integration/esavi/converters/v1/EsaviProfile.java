@@ -799,8 +799,10 @@ EsaviContext ctx)
         // nombreOtroMecanismoVerificacion
 
         // fechaReconstitucionVacuna
+        item.addItem( vaccineDataReconstitutionDate( ctx, reconstitutionDate ) );
 
         // horaReconstitucionVacuna
+        item.addItem( vaccineDataReconstitutionTime( ctx, reconstitutionTime ) );
 
         return item;
     }
@@ -1036,6 +1038,40 @@ EsaviContext ctx)
 
         item.addAnswer()
             .setValue( new StringType( "Complete Address Where Given" ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataReconstitutionDate(
+            EsaviContext ctx,
+            String reconstitutionDate )
+    {
+        if ( !ctx.hasDataElement( reconstitutionDate ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "fechaReconstitucionVacuna" ) );
+
+        item.addAnswer().setValue( new DateType( ctx.dataElement( reconstitutionDate ) ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataReconstitutionTime(
+            EsaviContext ctx,
+            String reconstitutionTime )
+    {
+        if ( !ctx.hasDataElement( reconstitutionTime ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "horaReconstitucionVacuna" ) );
+
+        item.addAnswer().setValue( new TimeType( ctx.dataElement( reconstitutionTime ) + ":00"));
 
         return item;
     }
