@@ -736,15 +736,36 @@ EsaviContext ctx)
         // sistemaDeCodificacionParaNombreNormalizadoVacuna
         // no mapping
 
-        // nombreFabricante
+        // nombreNormalizadoVacuna
         item.addItem( vaccineDataAdministrationBrandName( ctx, brandName ) );
 
         // identificadorVacuna
         // item.addItem( vaccineDataAdministrationIdentifier( ctx, id ) );
+        // no mapping yet
 
+        // codigoVacunaWHODrug
+
+        // codigoVacunaOtro
+        // no mapping
+
+        // nombreFabricante
+        // TODO
+
+        // codigoFabricanteWHODrug
+        // no mapping
+
+        // numeroDosisVacuna
         item.addItem( vaccineDataAdministrationDoses( ctx, doses ) );
+
+        // numeroLote
         item.addItem( vaccineDataAdministrationBatch( ctx, batch ) );
+
+        // fechaVencimientoVacuna
         item.addItem( vaccineDataAdministrationExpiryDate( ctx, expiryDate ) );
+
+        // nombreDiluyenteVacuna
+        // numeroLoteDiluyente
+        // fechaVencimientoDiluyente
 
         // nombreVacunatorio
         item.addItem( vaccineDataVaccinationSite( ctx, id ) );
@@ -755,8 +776,20 @@ EsaviContext ctx)
         // horaVacunacion
         item.addItem( vaccineDataTime( ctx, vaccineTime ) );
 
+        // codigoDireccionVacunatorio
+        // item.addItem( vaccineDataAddress( ctx ) );
+        // no mapping
+
         // nombreDireccionVacunatorio
-        item.addItem( vaccineDataAddress( ctx ) );
+        // no mapping
+
+        // codigoMecanismoVerificacion
+
+        // nombreOtroMecanismoVerificacion
+
+        // fechaReconstitucionVacuna
+
+        // horaReconstitucionVacuna
 
         return item;
     }
