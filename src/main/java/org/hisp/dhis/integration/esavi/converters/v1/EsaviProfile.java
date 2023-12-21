@@ -740,7 +740,8 @@ EsaviContext ctx)
         // no mapping
 
         // nombreNormalizadoVacuna
-        item.addItem( vaccineDataAdministrationManufacturerName( ctx, manufacturername ) );
+        // item.addItem( vaccineDataAdministrationManufacturerName( ctx, manufacturername ) );
+        // TODO no mapping yet
 
         // identificadorVacuna
         // item.addItem( vaccineDataAdministrationIdentifier( ctx, id ) );
@@ -753,7 +754,7 @@ EsaviContext ctx)
         // no mapping
 
         // nombreFabricante
-        // TODO
+        item.addItem( vaccineDataAdministrationManufacturerName( ctx, manufacturername ) );
 
         // codigoFabricanteWHODrug
         // no mapping
@@ -816,18 +817,18 @@ EsaviContext ctx)
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministrationManufacturerName(
-        EsaviContext ctx, String brandName )
+        EsaviContext ctx, String manufacturerName )
     {
-        if ( !ctx.hasDataElement( brandName ) )
+        if ( !ctx.hasDataElement( manufacturerName ) )
         {
             return null;
         }
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "nombreNormalizadoVacuna" ) );
+            new StringType( "nombreFabricante" ) );
 
         item.addAnswer()
-            .setValue( new StringType( ctx.dataElement( brandName ) ) );
+            .setValue( new StringType( ctx.dataElement( manufacturerName ) ) );
 
         return item;
     }
