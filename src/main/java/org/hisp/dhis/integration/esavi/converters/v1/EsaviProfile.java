@@ -1071,7 +1071,9 @@ EsaviContext ctx)
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                 new StringType( "horaReconstitucionVacuna" ) );
 
-        item.addAnswer().setValue( new TimeType( ctx.dataElement( reconstitutionTime ) + ":00"));
+        String localTime = LocalTime.parse( ctx.dataElement( reconstitutionTime ) ).format( DateTimeFormatter.ISO_TIME );
+
+        item.addAnswer().setValue( new TimeType( localTime));
 
         return item;
     }
