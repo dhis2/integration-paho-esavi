@@ -747,6 +747,7 @@ EsaviContext ctx)
         // no mapping yet
 
         // codigoVacunaWHODrug
+        item.addItem( codigoVacunaWHODrug( ctx, id ) );
 
         // codigoVacunaOtro
         // no mapping
@@ -827,6 +828,23 @@ EsaviContext ctx)
 
         item.addAnswer()
             .setValue( new StringType( ctx.dataElement( brandName ) ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent codigoVacunaWHODrug(
+            EsaviContext ctx, String id )
+    {
+        if ( !ctx.hasDataElement( id ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "codigoVacunaWHODrug" ) );
+
+        String display = ctx.option(OPTIONSET_WHODRUG_COVID, ctx.dataElement( id ) );
+        item.addAnswer().setValue(EsaviWhoDrug.get(ctx.dataElement( id ), display));
 
         return item;
     }
