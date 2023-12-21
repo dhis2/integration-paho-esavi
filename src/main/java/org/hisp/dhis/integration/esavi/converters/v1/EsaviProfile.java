@@ -739,7 +739,9 @@ EsaviContext ctx)
         // nombreFabricante
         item.addItem( vaccineDataAdministrationBrandName( ctx, brandName ) );
 
-        item.addItem( vaccineDataAdministrationIdentifier( ctx, id ) );
+        // identificadorVacuna
+        // item.addItem( vaccineDataAdministrationIdentifier( ctx, id ) );
+
         item.addItem( vaccineDataAdministrationDoses( ctx, doses ) );
         item.addItem( vaccineDataAdministrationBatch( ctx, batch ) );
         item.addItem( vaccineDataAdministrationExpiryDate( ctx, expiryDate ) );
