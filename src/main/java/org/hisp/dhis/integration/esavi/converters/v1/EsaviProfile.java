@@ -1274,7 +1274,14 @@ EsaviContext ctx)
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "desenlaceESAVI" ) );
 
+        // codDesenlaceESAVI
         item.addItem( esaviOutcomeCode( ctx ) );
+
+        // fechaMuerte
+        item.addItem( fechaMuerte( ctx ) );
+
+        // autopsia
+        // TODO pending
 
         return item;
     }
@@ -1306,7 +1313,20 @@ EsaviContext ctx)
 
         return item;
     }
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaMuerte( EsaviContext ctx )
+    {
+        String DE_FECHA_MUERTE = "TKikUtqJQTq";
+        if ( !ctx.hasDataElement( DE_FECHA_MUERTE ) )
+        {
+            return null;
+        }
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "fechaMuerte" ) );
 
+        item.addAnswer().setValue( new DateType( ctx.dataElement( DE_FECHA_MUERTE ) ) );
+
+        return item;
+    }
     // ---------------------------------------------------------------------------------
     // Common
     // ---------------------------------------------------------------------------------
