@@ -181,6 +181,18 @@
                         }
                       }
                     ]
+                  },
+                  {
+                    "linkId": "autopsia",
+                    "answer": [
+                      {
+                        "valueCoding": {
+                          "system": "https://paho.org/esavi/CodeSystem/RespuestaSiNoNosabeCS",
+                          "code": "3",
+                          "display": "No sabe"
+                        }
+                      }
+                    ]
                   }
                 ]
               }
