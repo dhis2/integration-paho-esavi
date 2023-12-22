@@ -47,7 +47,11 @@ public final class EsaviProfile {
     public static final String OPTIONSET_MEDDRA = "OzARj1D09Dm";
     public static final String OPTIONSET_DILUENTS = "NdEeGMVaObK";
     public static final String OPTIONSET_DISTRITOS = "TYYlo7IdrCw";
-    public static final String FIRST_VACCINE = "uSVcZzSM3zg";
+    public static final String VACCINE_1 = "uSVcZzSM3zg";
+    public static final String VACCINE_2 = "g9PjywVj2fs";
+    public static final String VACCINE_3 = "OU5klvkk3SM";
+    public static final String VACCINE_4 = "menOXwIFZh5";
+
 
     private EsaviProfile()
     {
@@ -543,7 +547,7 @@ public final class EsaviProfile {
     // ---------------------------------------------------------------------------------
     private static boolean moreThanOneVaccine(EsaviContext ctx) {
 
-        String[] vaccine_ids = {FIRST_VACCINE, "g9PjywVj2fs", "OU5klvkk3SM", "menOXwIFZh5"};
+        String[] vaccine_ids = {VACCINE_1, VACCINE_2, VACCINE_3, VACCINE_4};
         int vaccines = 0;
         for (String vaccine_id : vaccine_ids)
         {
@@ -579,13 +583,13 @@ public final class EsaviProfile {
         item.addItem( medicamento( ctx, "nKWV4cjQ9lR", "p7VnQrQyGEl", "eEmvhkIOSKm" ) );
 
         // datosVacunas
-        item.addItem( vaccineDataAdministration( ctx, FIRST_VACCINE, "JSd0HQOgJ8w", "LIyV4t7eCfZ", "LNqkAlvGplL",
+        item.addItem( vaccineDataAdministration( ctx, VACCINE_1, "JSd0HQOgJ8w", "LIyV4t7eCfZ", "LNqkAlvGplL",
             "VFrc8SNFYm7", "dOkuCjpD978", "BSUncNBb20j", "om7AsREDduc", "zIKVrYHtdUx", "xk9QvZPMVQF", "FQM2ksIQix8", "cKx0VCmLrsc" ) );
-        item.addItem( vaccineDataAdministration( ctx, "g9PjywVj2fs", "eRwc8Y0CNLh", "E3F414izniN", "b1rSwGRcY5W",
+        item.addItem( vaccineDataAdministration( ctx, VACCINE_2, "eRwc8Y0CNLh", "E3F414izniN", "b1rSwGRcY5W",
             "rVUo2PBgwhr", "VrzEutEnzSJ", "fZFQVZFqu0q", "xXjnT9sjt4F", "KTHsZhIAGWf", "WN8844HG0zi", "ufWU3WStZgG", "FcqNLPNUPId" ) );
-        item.addItem( vaccineDataAdministration( ctx, "OU5klvkk3SM", "wdZrkUvnuyr", "WlE0K4xCc14", "YBnFoNouH6f",
+        item.addItem( vaccineDataAdministration( ctx, VACCINE_3, "wdZrkUvnuyr", "WlE0K4xCc14", "YBnFoNouH6f",
             "ffYfdSPmM1W", "f4WCAVwjHz0", "VQKdZ1KeD7u", "fW6RbpJk4hS", "gG0FZYpEctJ", "pLu0luPWikb", "MLP8fi1X7UX", "MGjnXmtmd7l" ) );
-        item.addItem( vaccineDataAdministration( ctx, "menOXwIFZh5", "Ptms0lmt4QX", "Aya8C25DXHe", "BHAfwo6JPDa",
+        item.addItem( vaccineDataAdministration( ctx, VACCINE_4, "Ptms0lmt4QX", "Aya8C25DXHe", "BHAfwo6JPDa",
             "ZfjyIKeX1AN", "H3TKHMFIN6V", "S1PRFSk8Y9v", "va0Smpy0LUn", "EDdd0HsfLcO", "ZTyN8vSf7bc", "MyWtDaOdlyD", "qhDonTAIjl0" ) );
 
         return item;
@@ -725,8 +729,8 @@ public final class EsaviProfile {
 
 
         // identificadorVacuna
-        // item.addItem( vaccineDataAdministrationIdentifier( ctx, id ) );
-        // no mapping yet
+        item.addItem( vaccineDataAdministrationIdentifier( ctx, id ) );
+
 
         // codigoVacunaWHODrug
         item.addItem( codigoVacunaWHODrug( ctx, id ) );
@@ -884,14 +888,23 @@ public final class EsaviProfile {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
             new StringType( "identificadorVacuna" ) );
 
-        // TODO value from DHIS2 is a long not integer
-        // https://dev.paho-dhis2.org/api/optionSets/PrAA7nJPXke?fields=id,code,name,options[id,code,name]
-        Integer value = Integer.valueOf( "132" );
-
-        item.addAnswer()
-            .setValue( new IntegerType( value ) );
-
-        return item;
+        switch ( id )
+        {
+            case VACCINE_1:
+                item.addAnswer().setValue( new IntegerType( "1" ) );
+                return item;
+            case VACCINE_2:
+                item.addAnswer().setValue( new IntegerType( "2" ) );
+                return item;
+            case VACCINE_3:
+                item.addAnswer().setValue( new IntegerType( "3" ) );
+                return item;
+            case VACCINE_4:
+                item.addAnswer().setValue( new IntegerType( "4" ) );
+                return item;
+            default:
+                return null;
+        }
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAdministrationDoses(
@@ -1055,7 +1068,7 @@ public final class EsaviProfile {
 
         final String VACUNA_MECANISMO_VERIFICACION = "QvLFXpsCWAd";
 
-        if (!vaccine_id.equals(FIRST_VACCINE) || !ctx.hasDataElement( VACUNA_MECANISMO_VERIFICACION )){
+        if (!vaccine_id.equals(VACCINE_1) || !ctx.hasDataElement( VACUNA_MECANISMO_VERIFICACION )){
             return null;
         }
 
@@ -1071,7 +1084,7 @@ public final class EsaviProfile {
     {
 
         final String VACUNA_OTRO_MECANISMO_VERIFICACION = "F1sQvGLtfEw";
-        if (!vaccine_id.equals(FIRST_VACCINE) || !ctx.hasDataElement( VACUNA_OTRO_MECANISMO_VERIFICACION ))
+        if (!vaccine_id.equals(VACCINE_1) || !ctx.hasDataElement( VACUNA_OTRO_MECANISMO_VERIFICACION ))
         {
             return null;
         }
