@@ -46,7 +46,7 @@ public final class EsaviProfile {
     public static final String OPTIONSET_WHODRUG_COVID = "PrAA7nJPXke";
     public static final String OPTIONSET_MEDDRA = "OzARj1D09Dm";
     public static final String OPTIONSET_DILUENTS = "NdEeGMVaObK";
-
+    public static final String OPTIONSET_DISTRITOS = "TYYlo7IdrCw";
     public static final String FIRST_VACCINE = "uSVcZzSM3zg";
 
     private EsaviProfile()
@@ -252,13 +252,26 @@ public final class EsaviProfile {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                 new StringType("datosPaciente"));
 
+        // numeroCaso
         item.addItem(caseId(ctx));
+
+        // idPaciente
         item.addItem(patientId(ctx));
-        // item.addItem( patientResidenceCode( ctx ) );
+
+        // codigoResidenciaHabitual
+        // no mapping
+
+        // nombreResidenciaHabitual
         item.addItem(patientResidence(ctx));
+
+        // sexoPaciente
         item.addItem(patientGender(ctx));
+
+        // fechaNacimiento
         item.addItem(patientDateOfBirth(ctx));
-        // item.addItem( patientEthnicity( ctx ) );
+
+        // etnia
+        // no mapping
 
         return item;
     }
@@ -291,24 +304,18 @@ public final class EsaviProfile {
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientResidenceCode(EsaviContext ctx) {
-        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                new StringType("codigoResidenciaHabitual"));
-
-        // TODO get from TE
-        item.addAnswer()
-                .setValue(new Coding("http://paho.org/esavi/CodeSystem/DirOrgNotiCS", "BR_SC_42_05407",
-                        "Florianópolis (Municipio), Santa Catarina, Brazil"));
-
-        return item;
-    }
-
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientResidence(EsaviContext ctx) {
+
+        final String TEA_RESIDENCIA = "eISp65Kw0Z7";
+
+        if (!ctx.hasAttribute(TEA_RESIDENCIA)) {
+            return null;
+        }
+
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                 new StringType("nombreResidenciaHabitual"));
 
-        // TODO get from TE
-        item.addAnswer().setValue(new StringType("Florianópolis"));
+        item.addAnswer().setValue(new StringType(ctx.option(OPTIONSET_DISTRITOS, ctx.attribute(TEA_RESIDENCIA))));
 
         return item;
     }
@@ -344,15 +351,6 @@ public final class EsaviProfile {
     // Esavi medicalBackground
     // ---------------------------------------------------------------------------------
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientEthnicity(EsaviContext ctx) {
-        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                new StringType("etnia"));
-
-        // TODO get from TE
-        item.addAnswer().setValue(new StringType("TODO"));
-
-        return item;
-    }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent medicalBackground(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
