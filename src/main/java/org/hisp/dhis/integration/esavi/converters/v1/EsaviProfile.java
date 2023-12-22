@@ -778,6 +778,7 @@ public final class EsaviProfile {
         item.addItem( vaccineDataCodigoMecanismoVerificacion( ctx ) );
 
         // nombreOtroMecanismoVerificacion
+        item.addItem( vaccineDataNombreOtroMecanismoVerificacion( ctx ) );
 
         // fechaReconstitucionVacuna
         item.addItem( vaccineDataReconstitutionDate( ctx, reconstitutionDate ) );
@@ -1024,6 +1025,23 @@ public final class EsaviProfile {
                 new StringType( "codigoMecanismoVerificacion" ) );
 
         item.addAnswer().setValue(EsaviMecanismoVerificacionVacuna.get(ctx.dataElement(VACUNA_MECANISMO_VERIFICACION)));
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataNombreOtroMecanismoVerificacion( EsaviContext ctx)
+    {
+
+        final String VACUNA_OTRO_MECANISMO_VERIFICACION = "F1sQvGLtfEw";
+        if ( moreThanOneVaccine(ctx) ||  !ctx.hasDataElement( VACUNA_OTRO_MECANISMO_VERIFICACION ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "nombreOtroMecanismoVerificacion" ) );
+
+        item.addAnswer().setValue( new StringType(ctx.dataElement(VACUNA_OTRO_MECANISMO_VERIFICACION)));
 
         return item;
     }
