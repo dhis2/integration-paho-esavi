@@ -1498,7 +1498,7 @@ public final class EsaviProfile {
         item.addItem( fechaMuerte( ctx ) );
 
         // autopsia
-        // TODO pending
+        item.addItem( autopsia( ctx ) );
 
         return item;
     }
@@ -1545,6 +1545,46 @@ public final class EsaviProfile {
                 new StringType( "fechaMuerte" ) );
 
         item.addAnswer().setValue( new DateType( ctx.dataElement( DE_FECHA_MUERTE ) ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent autopsia( EsaviContext ctx )
+    {
+        // Escenario 1: ¿se solicitó autopsia?=si & ¿se solicitó autopsia verbal?=si, entonces autopsia=si.
+        // Escenario 2: ¿se solicitó autopsia?=si & ¿se solicitó autopsia verbal?=no/vacio. En ese caso autopsia=si
+        // Escenario 3: ¿se solicitó autopsia?=no/vacio & ¿se solicitó autopsia verbal?=si. En ese caso autopsia=si.
+        // Escenario 4: ¿se solicitó autopsia?=no/vacio & ¿se solicitó autopsia verbal?=no/vacio. En ese caso autopsia=no.
+        // Escenario 5: ¿se solicitó autopsia?=vacio Y ¿se solicitó autopsia verbal?=vacío. En ese caso autopsia= No sabe
+
+        String DE_AUTOPSIA = "YUcJrLWmGyv";
+        String DE_AUTOPSIA_VERBAL = "CYZNXLLeOr6";
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "autopsia" ) );
+
+        boolean autopsia = false;
+        boolean autopsia_verbal = false;
+
+        if ( !ctx.hasDataElement( DE_AUTOPSIA ) && !ctx.hasDataElement( DE_AUTOPSIA_VERBAL ))
+        {
+            item.addAnswer().setValue(EsaviRespuestaSimple.get("3")); // No sabe
+            return item;
+        }
+
+        if (ctx.hasDataElement( DE_AUTOPSIA )) {
+            autopsia = Boolean.parseBoolean(ctx.dataElement( DE_AUTOPSIA ));
+        }
+        if (ctx.hasDataElement( DE_AUTOPSIA_VERBAL )) {
+            autopsia_verbal = Boolean.parseBoolean(ctx.dataElement( DE_AUTOPSIA_VERBAL ));
+        }
+
+        if (autopsia || autopsia_verbal){
+            item.addAnswer().setValue(EsaviRespuestaSimple.get("1")); // Si
+        }
+        else{
+            item.addAnswer().setValue(EsaviRespuestaSimple.get("2")); // No
+        }
 
         return item;
     }
