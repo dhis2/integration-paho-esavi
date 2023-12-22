@@ -47,6 +47,8 @@ public final class EsaviProfile {
     public static final String OPTIONSET_MEDDRA = "OzARj1D09Dm";
     public static final String OPTIONSET_DILUENTS = "NdEeGMVaObK";
 
+    public static final String FIRST_VACCINE = "uSVcZzSM3zg";
+
     private EsaviProfile()
     {
 
@@ -543,7 +545,7 @@ public final class EsaviProfile {
     // ---------------------------------------------------------------------------------
     private static boolean moreThanOneVaccine(EsaviContext ctx) {
 
-        String[] vaccine_ids = {"uSVcZzSM3zg", "g9PjywVj2fs", "OU5klvkk3SM", "menOXwIFZh5"};
+        String[] vaccine_ids = {FIRST_VACCINE, "g9PjywVj2fs", "OU5klvkk3SM", "menOXwIFZh5"};
         int vaccines = 0;
         for (String vaccine_id : vaccine_ids)
         {
@@ -579,7 +581,7 @@ public final class EsaviProfile {
         item.addItem( medicamento( ctx, "nKWV4cjQ9lR", "p7VnQrQyGEl", "eEmvhkIOSKm" ) );
 
         // datosVacunas
-        item.addItem( vaccineDataAdministration( ctx, "uSVcZzSM3zg", "JSd0HQOgJ8w", "LIyV4t7eCfZ", "LNqkAlvGplL",
+        item.addItem( vaccineDataAdministration( ctx, FIRST_VACCINE, "JSd0HQOgJ8w", "LIyV4t7eCfZ", "LNqkAlvGplL",
             "VFrc8SNFYm7", "dOkuCjpD978", "BSUncNBb20j", "om7AsREDduc", "zIKVrYHtdUx", "xk9QvZPMVQF", "FQM2ksIQix8", "cKx0VCmLrsc" ) );
         item.addItem( vaccineDataAdministration( ctx, "g9PjywVj2fs", "eRwc8Y0CNLh", "E3F414izniN", "b1rSwGRcY5W",
             "rVUo2PBgwhr", "VrzEutEnzSJ", "fZFQVZFqu0q", "xXjnT9sjt4F", "KTHsZhIAGWf", "WN8844HG0zi", "ufWU3WStZgG", "FcqNLPNUPId" ) );
@@ -775,10 +777,10 @@ public final class EsaviProfile {
         // no mapping
 
         // codigoMecanismoVerificacion
-        item.addItem( vaccineDataCodigoMecanismoVerificacion( ctx ) );
+        item.addItem( vaccineDataCodigoMecanismoVerificacion( ctx, id ) );
 
         // nombreOtroMecanismoVerificacion
-        item.addItem( vaccineDataNombreOtroMecanismoVerificacion( ctx ) );
+        item.addItem( vaccineDataNombreOtroMecanismoVerificacion( ctx, id ) );
 
         // fechaReconstitucionVacuna
         item.addItem( vaccineDataReconstitutionDate( ctx, reconstitutionDate ) );
@@ -1012,12 +1014,12 @@ public final class EsaviProfile {
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataCodigoMecanismoVerificacion( EsaviContext ctx)
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataCodigoMecanismoVerificacion( EsaviContext ctx, String vaccine_id)
     {
 
         final String VACUNA_MECANISMO_VERIFICACION = "QvLFXpsCWAd";
-        if ( moreThanOneVaccine(ctx) ||  !ctx.hasDataElement( VACUNA_MECANISMO_VERIFICACION ) )
-        {
+
+        if (!vaccine_id.equals(FIRST_VACCINE) || !ctx.hasDataElement( VACUNA_MECANISMO_VERIFICACION )){
             return null;
         }
 
@@ -1029,11 +1031,11 @@ public final class EsaviProfile {
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataNombreOtroMecanismoVerificacion( EsaviContext ctx)
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataNombreOtroMecanismoVerificacion( EsaviContext ctx, String vaccine_id)
     {
 
         final String VACUNA_OTRO_MECANISMO_VERIFICACION = "F1sQvGLtfEw";
-        if ( moreThanOneVaccine(ctx) ||  !ctx.hasDataElement( VACUNA_OTRO_MECANISMO_VERIFICACION ) )
+        if (!vaccine_id.equals(FIRST_VACCINE) || !ctx.hasDataElement( VACUNA_OTRO_MECANISMO_VERIFICACION ))
         {
             return null;
         }
