@@ -580,6 +580,25 @@ EsaviContext ctx)
     // ---------------------------------------------------------------------------------
     // Esavi Medicine
     // ---------------------------------------------------------------------------------
+    private static boolean moreThanOneVaccine(EsaviContext ctx) {
+
+        String[] vaccine_ids = {"uSVcZzSM3zg", "g9PjywVj2fs", "OU5klvkk3SM", "menOXwIFZh5"};
+        int vaccines = 0;
+        for (String vaccine_id : vaccine_ids)
+        {
+            if ( ctx.hasDataElement( vaccine_id ) )
+            {
+                ++vaccines;
+            }
+        }
+
+        if (vaccines>1){
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent pharmaceuticalBackground( EsaviContext ctx )
     {
@@ -795,6 +814,7 @@ EsaviContext ctx)
         // no mapping
 
         // codigoMecanismoVerificacion
+        item.addItem( vaccineDataCodigoMecanismoVerificacion( ctx ) );
 
         // nombreOtroMecanismoVerificacion
 
@@ -1029,6 +1049,24 @@ EsaviContext ctx)
 
         return item;
     }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataCodigoMecanismoVerificacion( EsaviContext ctx)
+    {
+
+        final String VACUNA_MECANISMO_VERIFICACION = "QvLFXpsCWAd";
+        if ( moreThanOneVaccine(ctx) ||  !ctx.hasDataElement( VACUNA_MECANISMO_VERIFICACION ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "codigoMecanismoVerificacion" ) );
+
+        item.addAnswer().setValue(EsaviMecanismoVerificacionVacuna.get(ctx.dataElement(VACUNA_MECANISMO_VERIFICACION)));
+
+        return item;
+    }
+
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAddress(
         EsaviContext ctx )
