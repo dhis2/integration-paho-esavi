@@ -41,209 +41,177 @@ import org.hisp.dhis.integration.esavi.config.properties.DhisProperties;
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
-public final class EsaviProfile
-{
+public final class EsaviProfile {
 
     public static final String OPTIONSET_WHODRUG_COVID = "PrAA7nJPXke";
     public static final String OPTIONSET_MEDDRA = "OzARj1D09Dm";
     public static final String OPTIONSET_DILUENTS = "NdEeGMVaObK";
 
-    public static QuestionnaireResponse create(TrackedEntity trackedEntity, DhisProperties dhisProperties )
+    private EsaviProfile()
     {
-        EsaviContext ctx = new EsaviContext( trackedEntity, dhisProperties );
+
+    }
+
+    public static QuestionnaireResponse create(TrackedEntity trackedEntity, DhisProperties dhisProperties) {
+        EsaviContext ctx = new EsaviContext(trackedEntity, dhisProperties);
 
         QuestionnaireResponse response = new QuestionnaireResponse();
-        response.setId( trackedEntity.getTrackedEntity().get() );
-        response.setAuthored( new Date() );
-        response.setStatus( COMPLETED );
+        response.setId(trackedEntity.getTrackedEntity().get());
+        response.setAuthored(new Date());
+        response.setStatus(COMPLETED);
 
-        response.setIdentifier( new Identifier()
-            .setValue( ctx.attribute( "KSr2yTdu1AI" ) )
-            .setSystem( "http://ops.org/esavi/COL" ) );
+        response.setIdentifier(new Identifier()
+                .setValue(ctx.attribute("KSr2yTdu1AI"))
+                .setSystem("http://ops.org/esavi/COL"));
 
         response.getMeta()
-            .addProfile( "https://paho.org/fhir/esavi/StructureDefinition/ESAVIQuestionnaireResponse" );
+                .addProfile("https://paho.org/fhir/esavi/StructureDefinition/ESAVIQuestionnaireResponse");
 
         response
-            .setQuestionnaire( "https://paho.org/fhir/esavi/Questionnaire/CuestionarioESAVI" );
+                .setQuestionnaire("https://paho.org/fhir/esavi/Questionnaire/CuestionarioESAVI");
 
-        response.setText( new Narrative()
-            .setStatus( Narrative.NarrativeStatus.GENERATED )
-            .setDiv( new XhtmlNode()
-                .setValue( "<div>RESPUESTA A CUESTIONARIO ID " + ctx.attribute( "KSr2yTdu1AI" ) + "</div>" ) ) );
+        response.setText(new Narrative()
+                .setStatus(Narrative.NarrativeStatus.GENERATED)
+                .setDiv(new XhtmlNode()
+                        .setValue("<div>RESPUESTA A CUESTIONARIO ID " + ctx.attribute("KSr2yTdu1AI") + "</div>")));
 
-        response.addItem( datosNotificacionGeneral( ctx ) );
-        response.addItem( patientDemographics( ctx ) );
-        response.addItem( medicalBackground( ctx ) );
-        response.addItem( pharmaceuticalBackground( ctx ) );
-        response.addItem( esaviRegistration( ctx ) );
+        response.addItem(datosNotificacionGeneral(ctx));
+        response.addItem(patientDemographics(ctx));
+        response.addItem(medicalBackground(ctx));
+        response.addItem(pharmaceuticalBackground(ctx));
+        response.addItem(esaviRegistration(ctx));
 
         return response;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent datosNotificacionGeneral( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent datosNotificacionGeneral(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "datosNotificacionGeneral" ) );
+                new StringType("datosNotificacionGeneral"));
 
-        item.addItem( datosNotificacion( ctx ) );
-        item.addItem( fechas( ctx ) );
+        item.addItem(datosNotificacion(ctx));
+        item.addItem(fechas(ctx));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechas( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechas(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "fechas" ) );
+                new StringType("fechas"));
 
-        item.addItem( fechaConsulta( ctx ) );
-        item.addItem( fechaNotificacion( ctx ) );
-        item.addItem( fechaLlenadoFicha( ctx ) );
-        item.addItem( fechaRepoNacional( ctx ) );
+        item.addItem(fechaConsulta(ctx));
+        item.addItem(fechaNotificacion(ctx));
+        item.addItem(fechaLlenadoFicha(ctx));
+        item.addItem(fechaRepoNacional(ctx));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaConsulta( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaConsulta(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "fechaConsulta" ) );
+                new StringType("fechaConsulta"));
 
         item.addAnswer()
-            .setValue( new DateType( ctx.dataElement( "PW0dQpcY2wD" ) ) );
+                .setValue(new DateType(ctx.dataElement("PW0dQpcY2wD")));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaNotificacion( EsaviContext ctx )
-    {
-        if ( ctx.getCompletedDate() == null)
-        {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaNotificacion(EsaviContext ctx) {
+        if (ctx.getCompletedDate() == null) {
             return null;
         }
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "fechaNotificacion" ) );
+                new StringType("fechaNotificacion"));
 
         item.addAnswer()
-            .setValue( new DateType( ctx.getCompletedDate() ) );
+                .setValue(new DateType(ctx.getCompletedDate()));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaLlenadoFicha( EsaviContext ctx )
-    {
-        if ( ctx.getCompletedDate() == null)
-        {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaLlenadoFicha(EsaviContext ctx) {
+        if (ctx.getCompletedDate() == null) {
             return null;
         }
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "fechaLlenadoFicha" ) );
+                new StringType("fechaLlenadoFicha"));
 
         item.addAnswer()
-            .setValue( new DateType( ctx.getCompletedDate() ) );
+                .setValue(new DateType(ctx.getCompletedDate()));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaRepoNacional( EsaviContext ctx )
-    {
-        if ( ctx.getCompletedDate() == null)
-        {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaRepoNacional(EsaviContext ctx) {
+        if (ctx.getCompletedDate() == null) {
             return null;
         }
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "fechaRepoNacional" ) );
+                new StringType("fechaRepoNacional"));
 
         item.addAnswer()
-            .setValue( new DateType( ctx.getCompletedDate() ) );
+                .setValue(new DateType(ctx.getCompletedDate()));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent datosNotificacion( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent datosNotificacion(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "datosNotificacion" ) );
+                new StringType("datosNotificacion"));
 
-        item.addItem( caseOriginCountry( ctx ) );
-        item.addItem( nombreOrganizacionNotificadora( ctx ) );
-        item.addItem( codigoDireccionOrganizacion( ctx ) );
-        item.addItem( nombreDireccionOrganizacion( ctx ) );
-        item.addItem( codigoProfesionNotificador( ctx ) );
+        item.addItem(caseOriginCountry(ctx));
+        item.addItem(nombreOrganizacionNotificadora(ctx));
+        item.addItem(codigoDireccionOrganizacion(ctx));
+        item.addItem(nombreDireccionOrganizacion(ctx));
+        item.addItem(codigoProfesionNotificador(ctx));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent caseOriginCountry( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent caseOriginCountry(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "paisOrigen-Reg" ) );
+                new StringType("paisOrigen-Reg"));
 
         // TODO (Future) Update source of this field. Currently fixed to Paraguay (PRY)
         item.addAnswer()
-            .setValue( new Coding( "urn:iso:std:iso:3166", "PRY", "Paraguay" ) );
+                .setValue(new Coding("urn:iso:std:iso:3166", "PRY", "Paraguay"));
 
         return item;
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent nombreOrganizacionNotificadora(
-        EsaviContext ctx )
-    {
+            EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "nombreOrganizacionNotificadora" ) );
+                new StringType("nombreOrganizacionNotificadora"));
 
         item.addAnswer()
-            .setValue( new StringType( ctx.getEnrollment().getOrgUnitName().get() ) );
+                .setValue(new StringType(ctx.getEnrollment().getOrgUnitName().get()));
 
         return item;
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent codigoDireccionOrganizacion(
-        EsaviContext ctx )
-    {
+            EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "codigoDireccionOrganizacion" ) );
+                new StringType("codigoDireccionOrganizacion"));
 
         item.addAnswer()
-            .setValue( new Coding( "https://paho.org/fhir/esavi/ValueSet/DirOrgNotiVS", "CO_DC_11001",
-                "Bogota, D.C. (Municipio), Santa Fe de Bogota DC, Colombia" ) );
+                .setValue(new Coding("https://paho.org/fhir/esavi/ValueSet/DirOrgNotiVS", "CO_DC_11001",
+                        "Bogota, D.C. (Municipio), Santa Fe de Bogota DC, Colombia"));
 
         return null;
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent nombreDireccionOrganizacion(
-        EsaviContext ctx )
-    {
+            EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "nombreDireccionOrganizacion" ) );
+                new StringType("nombreDireccionOrganizacion"));
 
         item.addAnswer()
-            .setValue( new StringType( "Bogota, D.C. (Municipio), Santa Fe de Bogota DC, Colombia" ) );
-
-        return item;
-    }
-
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent codigoProfesionNotificador(
-        EsaviContext ctx )
-    {
-        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "codigoProfesionNotificador" ) );
-
-        // 0..1 cardinality in IG
-        if ( ctx.hasDataElement( "Tgi4xP5DCzr" ) )
-        {
-            item.addAnswer()
-                .setValue( EsaviProfession.get( ctx.dataElement( "Tgi4xP5DCzr" ) ) );
-        }
-        else
-        { // no data value for that DE, but there is default option in the IG
-            item.addAnswer()
-                .setValue( EsaviProfession.get( null ) );
-        }
+                .setValue(new StringType("Bogota, D.C. (Municipio), Santa Fe de Bogota DC, Colombia"));
 
         return item;
     }
@@ -252,125 +220,120 @@ public final class EsaviProfile
     // Patient Demographics
     // ---------------------------------------------------------------------------------
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientDemographics( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent codigoProfesionNotificador(
+            EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "datosIdVacunado" ) );
+                new StringType("codigoProfesionNotificador"));
 
-        item.addItem( patientData( ctx ) );
+        // 0..1 cardinality in IG
+        if (ctx.hasDataElement("Tgi4xP5DCzr")) {
+            item.addAnswer()
+                    .setValue(EsaviProfession.get(ctx.dataElement("Tgi4xP5DCzr")));
+        } else { // no data value for that DE, but there is default option in the IG
+            item.addAnswer()
+                    .setValue(EsaviProfession.get(null));
+        }
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientData( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientDemographics(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "datosPaciente" ) );
+                new StringType("datosIdVacunado"));
 
-        item.addItem( caseId( ctx ) );
-        item.addItem( patientId( ctx ) );
+        item.addItem(patientData(ctx));
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientData(EsaviContext ctx) {
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType("datosPaciente"));
+
+        item.addItem(caseId(ctx));
+        item.addItem(patientId(ctx));
         // item.addItem( patientResidenceCode( ctx ) );
-        item.addItem( patientResidence( ctx ) );
-        item.addItem( patientGender( ctx ) );
-        item.addItem( patientDateOfBirth( ctx ) );
+        item.addItem(patientResidence(ctx));
+        item.addItem(patientGender(ctx));
+        item.addItem(patientDateOfBirth(ctx));
         // item.addItem( patientEthnicity( ctx ) );
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent caseId( EsaviContext ctx )
-    {
-        if ( !ctx.hasAttribute( "KSr2yTdu1AI" ) )
-        {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent caseId(EsaviContext ctx) {
+        if (!ctx.hasAttribute("KSr2yTdu1AI")) {
             return null;
         }
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "numeroCaso" ) );
+                new StringType("numeroCaso"));
 
         // TODO fix hardcoding of uid
-        item.addAnswer().setValue( new StringType( ctx.attribute( "KSr2yTdu1AI" ) ) );
+        item.addAnswer().setValue(new StringType(ctx.attribute("KSr2yTdu1AI")));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientId( EsaviContext ctx )
-    {
-        if ( !ctx.hasAttribute( "Ewi7FUfcHAD" ) )
-        {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientId(EsaviContext ctx) {
+        if (!ctx.hasAttribute("Ewi7FUfcHAD")) {
             return null;
         }
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "idPaciente" ) );
+                new StringType("idPaciente"));
 
         // TODO fix hardcoding of uid
-        item.addAnswer().setValue( new StringType( hash( ctx.attribute( "Ewi7FUfcHAD" ) ) ) );
+        item.addAnswer().setValue(new StringType(hash(ctx.attribute("Ewi7FUfcHAD"))));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientResidenceCode( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientResidenceCode(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "codigoResidenciaHabitual" ) );
+                new StringType("codigoResidenciaHabitual"));
 
         // TODO get from TE
         item.addAnswer()
-            .setValue( new Coding( "http://paho.org/esavi/CodeSystem/DirOrgNotiCS", "BR_SC_42_05407",
-                "Florianópolis (Municipio), Santa Catarina, Brazil" ) );
+                .setValue(new Coding("http://paho.org/esavi/CodeSystem/DirOrgNotiCS", "BR_SC_42_05407",
+                        "Florianópolis (Municipio), Santa Catarina, Brazil"));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientResidence( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientResidence(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "nombreResidenciaHabitual" ) );
+                new StringType("nombreResidenciaHabitual"));
 
         // TODO get from TE
-        item.addAnswer().setValue( new StringType( "Florianópolis" ) );
+        item.addAnswer().setValue(new StringType("Florianópolis"));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientGender( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientGender(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "sexoPaciente" ) );
+                new StringType("sexoPaciente"));
 
         // TODO fix hardcoding of uid
-        Enumerations.AdministrativeGender gender = EsaviGender.get( ctx.attribute( "oindugucx72" ) );
+        Enumerations.AdministrativeGender gender = EsaviGender.get(ctx.attribute("oindugucx72"));
 
         item.addAnswer()
-            .setValue( new Coding( gender.getSystem(), gender.toCode(), gender.getDisplay() ) );
+                .setValue(new Coding(gender.getSystem(), gender.toCode(), gender.getDisplay()));
 
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientDateOfBirth( EsaviContext ctx )
-    {
-        if ( !ctx.hasAttribute( "NI0QRzJvQ0k" ) )
-        {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientDateOfBirth(EsaviContext ctx) {
+        if (!ctx.hasAttribute("NI0QRzJvQ0k")) {
             return null;
         }
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "fechaNacimiento" ) );
+                new StringType("fechaNacimiento"));
 
         // TODO fix hardcoding of uid
-        item.addAnswer().setValue( new DateType( ctx.attribute( "NI0QRzJvQ0k" ) ) );
-
-        return item;
-    }
-
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientEthnicity( EsaviContext ctx )
-    {
-        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "etnia" ) );
-
-        // TODO get from TE
-        item.addAnswer().setValue( new StringType( "TODO" ) );
+        item.addAnswer().setValue(new DateType(ctx.attribute("NI0QRzJvQ0k")));
 
         return item;
     }
@@ -379,10 +342,19 @@ public final class EsaviProfile
     // Esavi medicalBackground
     // ---------------------------------------------------------------------------------
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent medicalBackground( EsaviContext ctx )
-    {
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent patientEthnicity(EsaviContext ctx) {
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                new StringType( "antecedentesMedicos" ) );
+                new StringType("etnia"));
+
+        // TODO get from TE
+        item.addAnswer().setValue(new StringType("TODO"));
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent medicalBackground(EsaviContext ctx) {
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType("antecedentesMedicos"));
 
         // ensayoClinico
         // No mapping
@@ -391,16 +363,15 @@ public final class EsaviProfile
         item.addItem( antecedentesEnfermedadesPrevias( ctx ) );
 
         // antecedentesEventosAdversos
-        item.addItem( antecedentesEventosAdversos( ctx ) );
+        item.addItem(antecedentesEventosAdversos(ctx));
 
         // antecedentesSarsCov2
-        item.addItem( antecedentesSarsCov2( ctx ) );
+        item.addItem(antecedentesSarsCov2(ctx));
 
         // pacienteEmbarazada
-        item.addItem( pacienteEmbarazada( ctx ) );
+        item.addItem(pacienteEmbarazada(ctx));
 
-        if (! item.hasItem())
-        {
+        if (!item.hasItem()) {
             return null;
         }
 
@@ -408,84 +379,77 @@ public final class EsaviProfile
     }
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent antecedentesEnfermedadesPrevias(
-            EsaviContext ctx)
-    {
+            EsaviContext ctx) {
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                new StringType( "antecedentesEnfermedadesPrevias" ) );
+                new StringType("antecedentesEnfermedadesPrevias"));
 
         String[] medical_history_uids = {"qefbRP79xOR", "AFZZf15RB9H", "IHAuvjbCaiq", "q5gX7VOf0LI", "j6J8gLoFePq", "Fm78gKjGygn", "ZKn2LDznlHd", "FUxdYjcINIh", "j9yee5ZTdyE"};
-        for (String medical_history : medical_history_uids)
-        {
-            if ( ctx.hasDataElement( medical_history) ) {
+        for (String medical_history : medical_history_uids) {
+            if (ctx.hasDataElement(medical_history)) {
                 QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                        new StringType( "codigoMedDRAEnfPrevia" ) );
-                itemInside.addAnswer().setValue( EsaviMeddra.get(ctx.dataElement( medical_history ), ctx.option(OPTIONSET_MEDDRA, ctx.dataElement( medical_history )) ) );
+                        new StringType("codigoMedDRAEnfPrevia"));
+                itemInside.addAnswer().setValue(EsaviMeddra.get(ctx.dataElement(medical_history), ctx.option(OPTIONSET_MEDDRA, ctx.dataElement(medical_history))));
                 item.addItem(itemInside);
             }
 
         }
 
-        if (! item.hasItem())
-        {
+        if (!item.hasItem()) {
             return null;
         }
 
         return item;
     }
 
-
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent antecedentesEventosAdversos(
-EsaviContext ctx)
-    {
+            EsaviContext ctx) {
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                new StringType( "antecedentesEventosAdversos" ) );
+                new StringType("antecedentesEventosAdversos"));
 
         String EVENTO_SIMILAR = "IdCrdz34ZBK"; // ESAVI - Evento similar
-        if ( ctx.hasDataElement( EVENTO_SIMILAR) ) {
+        if (ctx.hasDataElement(EVENTO_SIMILAR)) {
             QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                    new StringType( "antecedentesAdvSimilar" ) );
-            itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( EVENTO_SIMILAR ) ) );
+                    new StringType("antecedentesAdvSimilar"));
+            itemInside.addAnswer().setValue(EsaviRespuestaSimple.get(ctx.dataElement(EVENTO_SIMILAR)));
             item.addItem(itemInside);
         }
 
         String ALERGIA_MEDICAMENTOS = "rgVs3pWqzx2"; // ESAVI - Alergia Medicamentos
-        if ( ctx.hasDataElement( ALERGIA_MEDICAMENTOS) ) {
+        if (ctx.hasDataElement(ALERGIA_MEDICAMENTOS)) {
             QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                    new StringType( "alergiaMedicamentos" ) );
-            itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( ALERGIA_MEDICAMENTOS ) ) );
+                    new StringType("alergiaMedicamentos"));
+            itemInside.addAnswer().setValue(EsaviRespuestaSimple.get(ctx.dataElement(ALERGIA_MEDICAMENTOS)));
             item.addItem(itemInside);
         }
 
         String ALERGIA_VACUNA = "CywpFDbxPqH"; // ESAVI - Alergia vacuna
-        if ( ctx.hasDataElement( ALERGIA_MEDICAMENTOS) ) {
+        if (ctx.hasDataElement(ALERGIA_MEDICAMENTOS)) {
             QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                    new StringType( "alergiaVacunas" ) );
-            itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( ALERGIA_VACUNA ) ) );
+                    new StringType("alergiaVacunas"));
+            itemInside.addAnswer().setValue(EsaviRespuestaSimple.get(ctx.dataElement(ALERGIA_VACUNA)));
             item.addItem(itemInside);
         }
 
-        if (! item.hasItem())
-        {
+        if (!item.hasItem()) {
             return null;
         }
 
         return item;
     }
 
-
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent antecedentesSarsCov2(EsaviContext ctx) {
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                new StringType( "antecedentesSarsCov2" ) );
+                new StringType("antecedentesSarsCov2"));
 
         // diagnosticoprevioSarsCov2
         String ANTECEDENTE_COVID = "XBU8oloqd7i"; // ESAVI - Antecedente COVID
-        if ( ctx.hasDataElement( ANTECEDENTE_COVID) ) {
+        if (ctx.hasDataElement(ANTECEDENTE_COVID)) {
             QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                    new StringType( "diagnosticoprevioSarsCov2" ) );
-            itemInside.addAnswer().setValue( EsaviRespuestaSimple.get( ctx.dataElement( ANTECEDENTE_COVID ) ) );
+                    new StringType("diagnosticoprevioSarsCov2"));
+            itemInside.addAnswer().setValue(EsaviRespuestaSimple.get(ctx.dataElement(ANTECEDENTE_COVID)));
             item.addItem(itemInside);
         }
 
@@ -501,24 +465,22 @@ EsaviContext ctx)
         // fechaTomaMuestraCovid19
         // No mapping
 
-        if (! item.hasItem())
-        {
+        if (!item.hasItem()) {
             return null;
         }
 
         return item;
     }
 
-
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent pacienteEmbarazada(EsaviContext ctx) {
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                new StringType( "pacienteEmbarazada" ) );
+                new StringType("pacienteEmbarazada"));
 
         // embarazadaMomentoVacuna
         String ESTA_EMBARAZADA_VACUNA = "U19JzF3LjsS"; // ESAVI - Embarazada en la vacunación
-        if ( ctx.hasDataElement( ESTA_EMBARAZADA_VACUNA) ) {
-            BooleanType esta_embarazada_vacuna = EsaviRespuestaSimple.getBoolean( ctx.dataElement( ESTA_EMBARAZADA_VACUNA ) );
+        if (ctx.hasDataElement(ESTA_EMBARAZADA_VACUNA)) {
+            BooleanType esta_embarazada_vacuna = EsaviRespuestaSimple.getBoolean(ctx.dataElement(ESTA_EMBARAZADA_VACUNA));
             if (esta_embarazada_vacuna != null) {
                 QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                         new StringType("embarazadaMomentoVacuna"));
@@ -529,8 +491,8 @@ EsaviContext ctx)
 
         // embarazadaMomentoESAVI
         String ESTA_EMBARAZADA_ESAVI = "ZzoWAqln5xc"; // ESAVI - Embarazada al inicio ESAVI
-        if ( ctx.hasDataElement( ESTA_EMBARAZADA_ESAVI) ) {
-            BooleanType esta_embarazada_esavi = EsaviRespuestaSimple.getBoolean( ctx.dataElement( ESTA_EMBARAZADA_ESAVI ) );
+        if (ctx.hasDataElement(ESTA_EMBARAZADA_ESAVI)) {
+            BooleanType esta_embarazada_esavi = EsaviRespuestaSimple.getBoolean(ctx.dataElement(ESTA_EMBARAZADA_ESAVI));
             if (esta_embarazada_esavi != null) {
                 QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                         new StringType("embarazadaMomentoESAVI"));
@@ -541,19 +503,19 @@ EsaviContext ctx)
 
         // fechaUltimaMenstruacion
         String FECHA_ULTIMA_MENSTRUACION = "oCKpt0i7VeZ"; // ESAVI - Fecha última menstruación
-        if ( ctx.hasDataElement( FECHA_ULTIMA_MENSTRUACION) ) {
+        if (ctx.hasDataElement(FECHA_ULTIMA_MENSTRUACION)) {
             QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                     new StringType("fechaUltimaMenstruacion"));
-            itemInside.addAnswer().setValue(new DateType(ctx.dataElement( FECHA_ULTIMA_MENSTRUACION )));
+            itemInside.addAnswer().setValue(new DateType(ctx.dataElement(FECHA_ULTIMA_MENSTRUACION)));
             item.addItem(itemInside);
         }
 
         // fechaProbableParto
         String FECHA_PROBABLE_PARTO = "mfGQRlcG7cc"; // ESAVI - Fecha probable de parto
-        if ( ctx.hasDataElement( FECHA_PROBABLE_PARTO) ) {
+        if (ctx.hasDataElement(FECHA_PROBABLE_PARTO)) {
             QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                     new StringType("fechaProbableParto"));
-            itemInside.addAnswer().setValue(new DateType(ctx.dataElement( FECHA_PROBABLE_PARTO )));
+            itemInside.addAnswer().setValue(new DateType(ctx.dataElement(FECHA_PROBABLE_PARTO)));
             item.addItem(itemInside);
         }
 
@@ -562,15 +524,14 @@ EsaviContext ctx)
 
         // codigoMonitoreoPosteriorVacuna
         String MONITOREO_POST_VACUNA = "Nl96399itF0"; // ESAVI - Seguimiento gestante
-        if ( ctx.hasDataElement( MONITOREO_POST_VACUNA) ) {
+        if (ctx.hasDataElement(MONITOREO_POST_VACUNA)) {
             QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
                     new StringType("codigoMonitoreoPosteriorVacuna"));
-            itemInside.addAnswer().setValue(new BooleanType(ctx.dataElement( MONITOREO_POST_VACUNA )));
+            itemInside.addAnswer().setValue(new BooleanType(ctx.dataElement(MONITOREO_POST_VACUNA)));
             item.addItem(itemInside);
         }
 
-        if (! item.hasItem())
-        {
+        if (!item.hasItem()) {
             return null;
         }
 
@@ -1067,7 +1028,6 @@ EsaviContext ctx)
         return item;
     }
 
-
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataAddress(
         EsaviContext ctx )
     {
@@ -1097,6 +1057,10 @@ EsaviContext ctx)
         return item;
     }
 
+    // ---------------------------------------------------------------------------------
+    // Esavi Registrations
+    // ---------------------------------------------------------------------------------
+
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataReconstitutionTime(
             EsaviContext ctx,
             String reconstitutionTime )
@@ -1115,10 +1079,6 @@ EsaviContext ctx)
 
         return item;
     }
-
-    // ---------------------------------------------------------------------------------
-    // Esavi Registrations
-    // ---------------------------------------------------------------------------------
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviRegistration(
         EsaviContext ctx )
@@ -1261,6 +1221,10 @@ EsaviContext ctx)
         return item;
     }
 
+    // ---------------------------------------------------------------------------------
+    // ESAVI Seriousness
+    // ---------------------------------------------------------------------------------
+
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviDescription( EsaviContext ctx,
         String description )
     {
@@ -1281,7 +1245,6 @@ EsaviContext ctx)
     // ---------------------------------------------------------------------------------
     // ESAVI Seriousness
     // ---------------------------------------------------------------------------------
-
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviDuringPregnancy(
             EsaviContext ctx )
@@ -1308,10 +1271,6 @@ EsaviContext ctx)
 
         return item;
     }
-
-    // ---------------------------------------------------------------------------------
-    // ESAVI Seriousness
-    // ---------------------------------------------------------------------------------
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviSeriousness(
         EsaviContext ctx )
@@ -1487,6 +1446,10 @@ EsaviContext ctx)
         return item;
     }
 
+    // ---------------------------------------------------------------------------------
+    // ESAVI Outcome
+    // ---------------------------------------------------------------------------------
+
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviSeriousnessOtherDescription(
         EsaviContext ctx )
     {
@@ -1502,10 +1465,6 @@ EsaviContext ctx)
 
         return item;
     }
-
-    // ---------------------------------------------------------------------------------
-    // ESAVI Outcome
-    // ---------------------------------------------------------------------------------
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviOutcome( EsaviContext ctx )
     {
@@ -1551,6 +1510,10 @@ EsaviContext ctx)
 
         return item;
     }
+    // ---------------------------------------------------------------------------------
+    // Common
+    // ---------------------------------------------------------------------------------
+
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent fechaMuerte( EsaviContext ctx )
     {
         String DE_FECHA_MUERTE = "TKikUtqJQTq";
@@ -1565,9 +1528,6 @@ EsaviContext ctx)
 
         return item;
     }
-    // ---------------------------------------------------------------------------------
-    // Common
-    // ---------------------------------------------------------------------------------
 
     private static String hash( String value )
     {
@@ -1590,10 +1550,5 @@ EsaviContext ctx)
         {
             throw new RuntimeException( e );
         }
-    }
-
-    private EsaviProfile()
-    {
-
     }
 }
