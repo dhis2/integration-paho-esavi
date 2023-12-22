@@ -125,14 +125,6 @@
                     ]
                   },
                   {
-                    "linkId": "nombreResidenciaHabitual",
-                    "answer": [
-                      {
-                        "valueString": "Florianópolis"
-                      }
-                    ]
-                  },
-                  {
                     "linkId": "sexoPaciente",
                     "answer": [
                       {
