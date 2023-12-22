@@ -52,6 +52,14 @@ public final class EsaviProfile {
     public static final String VACCINE_3 = "OU5klvkk3SM";
     public static final String VACCINE_4 = "menOXwIFZh5";
 
+    public static final String CAUSALITY_A1 = "tIHAJAXcDev";
+    public static final String CAUSALITY_A2 = "vIk1r0MRmBh";
+    public static final String CAUSALITY_A3 = "bNjv960SqRX";
+    public static final String CAUSALITY_A4 = "NsjdL0Z0fIn";
+    public static final String CAUSALITY_B1 = "dzYVg6O3ms5";
+    public static final String CAUSALITY_B2 = "pA2fuBPhwX7";
+    public static final String CAUSALITY_C = "pJk4Slb5EFb";
+    public static final String CAUSALITY_D = "YC286LMPlQW";
 
     private EsaviProfile()
     {
@@ -1174,7 +1182,15 @@ public final class EsaviProfile {
         item.addItem( esaviOutcome( ctx ) );
 
         // causalidadESAVI
-        // no mapping yet
+        item.addItem( causalidadESAVI( ctx, CAUSALITY_A1 ) );
+        item.addItem( causalidadESAVI( ctx, CAUSALITY_A2 ) );
+        item.addItem( causalidadESAVI( ctx, CAUSALITY_A3 ) );
+        item.addItem( causalidadESAVI( ctx, CAUSALITY_A4 ) );
+        item.addItem( causalidadESAVI( ctx, CAUSALITY_B1 ) );
+        item.addItem( causalidadESAVI( ctx, CAUSALITY_B2 ) );
+        item.addItem( causalidadESAVI( ctx, CAUSALITY_C ) );
+        item.addItem( causalidadESAVI( ctx, CAUSALITY_D ) );
+
         return item;
     }
 
@@ -1579,6 +1595,125 @@ public final class EsaviProfile {
 
         return item;
     }
+
+    // ---------------------------------------------------------------------------------
+    // causalidadESAVI
+    // ---------------------------------------------------------------------------------
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent causalidadESAVI( EsaviContext ctx, String id )
+    {
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "causalidadESAVI" ) );
+
+        // fechaCausalidadESAVI
+        // no mapping
+
+        // otroSistemaclasfcausalidad
+        // no mapping
+
+        // clasificacioncausaESAVI
+        // no mapping
+
+        // clasificacionDeCausalidadWHOAEFI
+        item.addItem( clasificacionDeCausalidadWHOAEFI(ctx, id) );
+
+        // clasificacionDeCausalidadWHOUMC
+        // no mapping
+
+        // clasificacionDeCausalidadNaranjo
+        // no mapping
+
+        // referenciaIdentificadorVacuna
+        // no mapping
+
+        // referenciaIdentificadorESAVI
+        // no mapping
+
+        // embarazoDuranteESAVI
+        // no mapping
+
+        if (!item.hasItem()) {
+            return null;
+        }
+
+        // Only if there is a causality, the system is added
+        // sistemaClasfcausalidad
+        item.addItem( sistemaClasfcausalidad() );
+
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent sistemaClasfcausalidad()
+    {
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "sistemaClasfcausalidad" ) );
+
+        item.addAnswer()
+                .setValue(
+                        new Coding( "https://paho.org/fhir/esavi/CodeSystem/SistemaClasfCausalidadCS", "WHO-AEFI", "WHO-AEFI" ) );
+
+        return item;
+    }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent clasificacionDeCausalidadWHOAEFI(EsaviContext ctx, String id )
+    {
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "clasificacionDeCausalidadWHOAEFI" ) );
+
+        switch ( id )
+        {
+            case CAUSALITY_A1:
+                if (ctx.dataElementIsTrue(CAUSALITY_A1)){
+                    item.addAnswer().setValue(new Coding( "https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceWHOAEFICS", "A1", "Evento relacionado con la vacuna o cualquiera de sus componentes" ) );
+                }
+                break;
+            case CAUSALITY_A2:
+                if (ctx.dataElementIsTrue(CAUSALITY_A2)) {
+                    item.addAnswer().setValue(new Coding("https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceWHOAEFICS", "A2", "Evento relacionado con una desviacion de calidad del producto biologico o la vacuna"));
+                }
+                break;
+            case CAUSALITY_A3:
+                if (ctx.dataElementIsTrue(CAUSALITY_A3)) {
+                    item.addAnswer().setValue(new Coding("https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceWHOAEFICS", "A3", "Evento relacionado con un error programatico"));
+                }
+                break;
+            case CAUSALITY_A4:
+                if (ctx.dataElementIsTrue(CAUSALITY_A4)) {
+                    item.addAnswer().setValue(new Coding("https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceWHOAEFICS", "A4", "Evento por estres que tuvo lugar inmediatemente antes, durante o inmediatamente despues del proceso de vacunacion"));
+                }
+                break;
+            case CAUSALITY_B1:
+                if (ctx.dataElementIsTrue(CAUSALITY_B1)) {
+                    item.addAnswer().setValue(new Coding("https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceWHOAEFICS", "B1", "La relacion temporal es congruente, pero no hay evidencia definitiva suficiente sobre una relacion causal con la vacuna (puede ser un evento recientemente asociadoa la vacuna [señal])"));
+                }
+                break;
+            case CAUSALITY_B2:
+                if (ctx.dataElementIsTrue(CAUSALITY_B2)) {
+                    item.addAnswer().setValue(new Coding("https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceWHOAEFICS", "B2", "Factores determinantes para la clasificación muestran tendencias conflictivas a favor y en contra de una asociacion causal con la vacunació"));
+                }
+                break;
+            case CAUSALITY_C:
+                if (ctx.dataElementIsTrue(CAUSALITY_C)) {
+                    item.addAnswer().setValue(new Coding("https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceWHOAEFICS", "C", "Causa Coincidente"));
+                }
+                break;
+            case CAUSALITY_D:
+                if (ctx.dataElementIsTrue(CAUSALITY_D)) {
+                    item.addAnswer().setValue(new Coding("https://paho.org/fhir/esavi/CodeSystem/ClasificacionDesenlaceWHOAEFICS", "NC", "No clasificable"));
+                }
+                break;
+            default:
+                return null;
+        }
+
+        if (!item.hasAnswer()) {
+            return null;
+        }
+        return item;
+
+    }
+
     // ---------------------------------------------------------------------------------
     // Common
     // ---------------------------------------------------------------------------------
