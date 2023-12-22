@@ -718,11 +718,11 @@ public final class EsaviProfile {
         item.addItem( vaccineDataAdministrationName( ctx, id ) );
 
         // sistemaDeCodificacionParaNombreNormalizadoVacuna
-        // no mapping
+        item.addItem( vaccineDataSistemaDeCodificacionParaNombreNormalizadoVacuna( ctx, id ) );
 
         // nombreNormalizadoVacuna
-        // item.addItem( vaccineDataAdministrationManufacturerName( ctx, manufacturername ) );
-        // TODO no mapping yet
+        item.addItem( vaccineDataNombreNormalizadoVacuna( ctx, id ) );
+
 
         // identificadorVacuna
         // item.addItem( vaccineDataAdministrationIdentifier( ctx, id ) );
@@ -802,6 +802,44 @@ public final class EsaviProfile {
 
         item.addAnswer()
             .setValue( new StringType( ctx.option(OPTIONSET_WHODRUG_COVID, ctx.dataElement( id ), id ) ) );
+
+        return item;
+    }
+
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataSistemaDeCodificacionParaNombreNormalizadoVacuna(
+            EsaviContext ctx, String id )
+    {
+        if ( !ctx.hasDataElement( id ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "sistemaDeCodificacionParaNombreNormalizadoVacuna" ) );
+
+        item.addAnswer()
+                .setValue(
+                        new Coding( "https://paho.org/fhir/esavi/CodeSystem/SistemasDeCodificacionCS", "2", "WHODrug" ) );
+
+
+        return item;
+    }
+
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataNombreNormalizadoVacuna(
+            EsaviContext ctx, String id )
+    {
+        if ( !ctx.hasDataElement( id ) )
+        {
+            return null;
+        }
+
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "nombreNormalizadoVacuna" ) );
+
+        item.addAnswer()
+                .setValue( new StringType( ctx.option(OPTIONSET_WHODRUG_COVID, ctx.dataElement( id ), id ) ) );
 
         return item;
     }
