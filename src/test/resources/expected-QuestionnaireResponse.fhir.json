@@ -16,7 +16,7 @@
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">RESPUESTA A CUESTIONARIO ID DEM_2023_11_09_000002</div>"
         },
         "identifier": {
-          "system": "http://ops.org/esavi/COL",
+          "system": "http://ops.org/esavi/PRY",
           "value": "DEM_2023_11_09_000002"
         },
         "questionnaire": "https://paho.org/fhir/esavi/Questionnaire/CuestionarioESAVI",

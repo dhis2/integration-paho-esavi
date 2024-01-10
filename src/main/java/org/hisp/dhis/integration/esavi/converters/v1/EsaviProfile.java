@@ -76,7 +76,7 @@ public final class EsaviProfile {
 
         response.setIdentifier(new Identifier()
                 .setValue(ctx.attribute("KSr2yTdu1AI"))
-                .setSystem("http://ops.org/esavi/COL"));
+                .setSystem("http://ops.org/esavi/PRY"));
 
         response.getMeta()
                 .addProfile("https://paho.org/fhir/esavi/StructureDefinition/ESAVIQuestionnaireResponse");
