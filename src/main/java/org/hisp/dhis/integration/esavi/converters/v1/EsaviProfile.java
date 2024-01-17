@@ -47,6 +47,7 @@ public final class EsaviProfile {
     public static final String OPTIONSET_MEDDRA = "OzARj1D09Dm";
     public static final String OPTIONSET_DILUENTS = "NdEeGMVaObK";
     public static final String OPTIONSET_DISTRITOS = "TYYlo7IdrCw";
+    public static final String OPTIONSET_LUGAR_VACUNACION = "GUpt2UXm3hR";
     public static final String VACCINE_1 = "uSVcZzSM3zg";
     public static final String VACCINE_2 = "g9PjywVj2fs";
     public static final String VACCINE_3 = "OU5klvkk3SM";
@@ -775,7 +776,7 @@ public final class EsaviProfile {
         item.addItem( vaccineDataAdministrationDiluentExpiryDate( ctx, diluentExpiryDate ) );
 
         // nombreVacunatorio
-        item.addItem( vaccineDataVaccinationSite( ctx, id ) );
+        item.addItem( vaccineDataVaccinationSite( ctx ) );
 
         // fechaVacunacion
         item.addItem( vaccineDataDate( ctx, vaccineDate ) );
@@ -1021,19 +1022,19 @@ public final class EsaviProfile {
         return item;
     }
 
-    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataVaccinationSite(
-        EsaviContext ctx, String id )
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent vaccineDataVaccinationSite( EsaviContext ctx )
     {
-        if ( !ctx.hasDataElement( id ) )
+        final String LUGAR_VACUNACION = "AIbRRSIHSqY";
+
+        if ( !ctx.hasDataElement( LUGAR_VACUNACION ) )
         {
             return null;
         }
 
         QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-            new StringType( "nombreVacunatorio" ) );
+                new StringType( "nombreVacunatorio" ) );
 
-        item.addAnswer()
-            .setValue( new StringType( ctx.getEnrollment().getOrgUnitName().get() ) );
+        item.addAnswer().setValue( new StringType( ctx.option(OPTIONSET_LUGAR_VACUNACION, ctx.dataElement( LUGAR_VACUNACION ) ) ) );
 
         return item;
     }
