@@ -1569,6 +1569,21 @@ public final class EsaviProfile {
         // autopsia
         item.addItem( autopsia( ctx ) );
 
+        // fechaNotificaMuerte
+        // no mapping
+
+        // fechaNotificaMuerteFetal
+        // no mapping
+
+        // autopsiaFetal
+        // no mapping
+
+        // comentarios
+        //item.addItem( esaviOutcome_comentarios( ctx ) );
+
+        // fechaInicioInvestigacion
+        item.addItem( esaviOutcome_fechaInicioInvestigacion( ctx ) );
+
         return item;
     }
 
@@ -1776,6 +1791,23 @@ public final class EsaviProfile {
 
         return item;
     }
+
+    private static QuestionnaireResponse.QuestionnaireResponseItemComponent esaviOutcome_fechaInicioInvestigacion( EsaviContext ctx )
+    {
+        String DE_FECHA_INVESTIGACION = "e8ltdHdx90O";
+        if ( !ctx.hasDataElement( DE_FECHA_INVESTIGACION ) )
+        {
+            return null;
+        }
+        QuestionnaireResponse.QuestionnaireResponseItemComponent item = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                new StringType( "fechaInicioInvestigacion" ) );
+
+        item.addAnswer().setValue( new DateType( ctx.dataElement( DE_FECHA_INVESTIGACION ) ) );
+
+        return item;
+    }
+
+
 
     private static String hash( String value )
     {
