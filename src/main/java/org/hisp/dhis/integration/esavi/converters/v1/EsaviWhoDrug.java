@@ -31,7 +31,7 @@ import org.hl7.fhir.r4.model.Coding;
 
 public class EsaviWhoDrug
 {
-    private static String SYSTEM = "https://paho.org/esavi/CodeSystem/WHODRUG_PENDING";
+    private static String SYSTEM = "https://apiportaldemo.who-umc.org";
 
     public static Coding get( String code, String display )
     {

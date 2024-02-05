@@ -34,7 +34,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 public class EsaviRespuestaSimple
 {
-    private static String SYSTEM = "https://paho.org/esavi/CodeSystem/RespuestaSiNoNosabeCS";
+    private static String SYSTEM = "https://paho.org/fhir/esavi/CodeSystem/RespuestaSiNoNosabeCS";
 
     public static Coding get( String value )
     {
@@ -48,6 +48,15 @@ public class EsaviRespuestaSimple
             return new Coding( SYSTEM, "3", "No sabe" );
         default:
             return null;
+        }
+    }
+
+    public static Coding fromBoolean( boolean value )
+    {
+        if (value == true) {
+            return new Coding(SYSTEM, "1", "Si");
+        } else {
+            return new Coding( SYSTEM, "2", "No" );
         }
     }
 

@@ -192,7 +192,7 @@ public final class EsaviProfile {
 
         // TODO (Future) Update source of this field. Currently fixed to Paraguay (PRY)
         item.addAnswer()
-                .setValue(new Coding("urn:iso:std:iso:3166", "PRY", "Paraguay"));
+                .setValue(new Coding("https://paho.org/fhir/esavi/CodeSystem/codPaisesCS", "PRY", "Paraguay"));
 
         return item;
     }
@@ -539,12 +539,12 @@ public final class EsaviProfile {
         // edadGestacional
         // No mapping
 
-        // codigoMonitoreoPosteriorVacuna
+        // monitoreoPosteriorVacuna
         String MONITOREO_POST_VACUNA = "Nl96399itF0"; // ESAVI - Seguimiento gestante
         if (ctx.hasDataElement(MONITOREO_POST_VACUNA)) {
             QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                    new StringType("codigoMonitoreoPosteriorVacuna"));
-            itemInside.addAnswer().setValue(new BooleanType(ctx.dataElement(MONITOREO_POST_VACUNA)));
+                    new StringType("monitoreoPosteriorVacuna"));
+            itemInside.addAnswer().setValue(EsaviRespuestaSimple.fromBoolean(Boolean.parseBoolean(ctx.dataElement(MONITOREO_POST_VACUNA))));
             item.addItem(itemInside);
         }
 
