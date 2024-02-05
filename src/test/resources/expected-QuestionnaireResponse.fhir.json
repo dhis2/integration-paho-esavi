@@ -34,7 +34,7 @@
                     "answer": [
                       {
                         "valueCoding": {
-                          "system": "urn:iso:std:iso:3166",
+                          "system": "https://paho.org/fhir/esavi/CodeSystem/codPaisesCS",
                           "code": "PRY",
                           "display": "Paraguay"
                         }
@@ -179,7 +179,7 @@
                     "answer": [
                       {
                         "valueCoding": {
-                          "system": "https://paho.org/esavi/CodeSystem/RespuestaSiNoNosabeCS",
+                          "system": "https://paho.org/fhir/esavi/CodeSystem/RespuestaSiNoNosabeCS",
                           "code": "3",
                           "display": "No sabe"
                         }
