@@ -34,6 +34,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.hisp.dhis.api.model.v2_38_1.TrackedEntity;
@@ -72,7 +73,14 @@ public final class EsaviProfile {
 
         QuestionnaireResponse response = new QuestionnaireResponse();
         response.setId(trackedEntity.getTrackedEntity().get());
-        response.setAuthored(new Date());
+        try {
+            Date authored = new SimpleDateFormat("yyyy-MM-dd").parse(ctx.getCompletedDate());
+            response.setAuthored(authored);
+        }
+        catch (Exception e) {
+            throw new RuntimeException( e );
+        }
+
         response.setStatus(COMPLETED);
 
         response.setIdentifier(new Identifier()
