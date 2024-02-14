@@ -505,25 +505,19 @@ public final class EsaviProfile {
         // embarazadaMomentoVacuna
         String ESTA_EMBARAZADA_VACUNA = "U19JzF3LjsS"; // ESAVI - Embarazada en la vacunación
         if (ctx.hasDataElement(ESTA_EMBARAZADA_VACUNA)) {
-            BooleanType esta_embarazada_vacuna = EsaviRespuestaSimple.getBoolean(ctx.dataElement(ESTA_EMBARAZADA_VACUNA));
-            if (esta_embarazada_vacuna != null) {
-                QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                        new StringType("embarazadaMomentoVacuna"));
-                itemInside.addAnswer().setValue(esta_embarazada_vacuna);
-                item.addItem(itemInside);
-            }
+            QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType("embarazadaMomentoVacuna"));
+            itemInside.addAnswer().setValue(EsaviRespuestaSimple.get(ctx.dataElement(ESTA_EMBARAZADA_VACUNA)));
+            item.addItem(itemInside);
         }
 
         // embarazadaMomentoESAVI
         String ESTA_EMBARAZADA_ESAVI = "ZzoWAqln5xc"; // ESAVI - Embarazada al inicio ESAVI
         if (ctx.hasDataElement(ESTA_EMBARAZADA_ESAVI)) {
-            BooleanType esta_embarazada_esavi = EsaviRespuestaSimple.getBoolean(ctx.dataElement(ESTA_EMBARAZADA_ESAVI));
-            if (esta_embarazada_esavi != null) {
-                QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
-                        new StringType("embarazadaMomentoESAVI"));
-                itemInside.addAnswer().setValue(esta_embarazada_esavi);
-                item.addItem(itemInside);
-            }
+            QuestionnaireResponse.QuestionnaireResponseItemComponent itemInside = new QuestionnaireResponse.QuestionnaireResponseItemComponent(
+                    new StringType("embarazadaMomentoESAVI"));
+            itemInside.addAnswer().setValue(EsaviRespuestaSimple.get(ctx.dataElement(ESTA_EMBARAZADA_ESAVI)));
+            item.addItem(itemInside);
         }
 
         // fechaUltimaMenstruacion
