@@ -224,7 +224,7 @@ public final class EsaviProfile {
         item.addAnswer()
                 .setValue(new Coding("https://paho.org/fhir/esavi/ValueSet/DirOrgNotiVS", "CO_DC_11001",
                         "Bogota, D.C. (Municipio), Santa Fe de Bogota DC, Colombia"));
-
+        // TODO As the mapping is pending, the returning value is null
         return null;
     }
 
