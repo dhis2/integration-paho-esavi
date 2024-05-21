@@ -1760,8 +1760,9 @@ public final class EsaviProfile {
         // Escenario 1: ¿se solicitó autopsia?=si & ¿se solicitó autopsia verbal?=si, entonces autopsia=si.
         // Escenario 2: ¿se solicitó autopsia?=si & ¿se solicitó autopsia verbal?=no/vacio. En ese caso autopsia=si
         // Escenario 3: ¿se solicitó autopsia?=no/vacio & ¿se solicitó autopsia verbal?=si. En ese caso autopsia=si.
-        // Escenario 4: ¿se solicitó autopsia?=no/vacio & ¿se solicitó autopsia verbal?=no/vacio. En ese caso autopsia=no.
-        // Escenario 5: ¿se solicitó autopsia?=vacio Y ¿se solicitó autopsia verbal?=vacío. En ese caso autopsia= No sabe
+        // Escenario 4: ¿se solicitó autopsia?=no & ¿se solicitó autopsia verbal?=no/vacio. En ese caso autopsia=no.
+        // Escenario 5: ¿se solicitó autopsia?=no/vacio & ¿se solicitó autopsia verbal?=no. En ese caso autopsia=no.
+        // Escenario 6: ¿se solicitó autopsia?=vacio Y ¿se solicitó autopsia verbal?=vacío. En ese caso autopsia= No sabe
 
         String DE_AUTOPSIA = "YUcJrLWmGyv";
         String DE_AUTOPSIA_VERBAL = "CYZNXLLeOr6";
