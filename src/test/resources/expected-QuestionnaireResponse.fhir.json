@@ -173,18 +173,6 @@
                         }
                       }
                     ]
-                  },
-                  {
-                    "linkId": "autopsia",
-                    "answer": [
-                      {
-                        "valueCoding": {
-                          "system": "https://paho.org/fhir/esavi/CodeSystem/RespuestaSiNoNosabeCS",
-                          "code": "3",
-                          "display": "No sabe"
-                        }
-                      }
-                    ]
                   }
                 ]
               }
