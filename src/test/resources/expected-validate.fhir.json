@@ -32,7 +32,7 @@
       "diagnostics": "Profile reference 'https://paho.org/fhir/esavi/StructureDefinition/ESAVIQuestionnaireResponse' has not been checked because it is unknown, and the validator is set to not fetch unknown profiles",
       "location": [
         "${json-unit.ignore}",
-        "Line 1, Col 2422"
+        "Line 1, Col 2268"
       ]
     }
   ]
