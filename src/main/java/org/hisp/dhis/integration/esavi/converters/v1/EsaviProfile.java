@@ -1757,6 +1757,24 @@ public final class EsaviProfile {
 
     private static QuestionnaireResponse.QuestionnaireResponseItemComponent autopsia( EsaviContext ctx )
     {
+        // ONLY IF Outcome == Muerte, autopsia is filled
+
+        EsaviOutcomeCode outcomeCode = EsaviOutcomeCode.UNKNOWN;
+
+        try {
+            String value = ctx.dataElement( "yRrSDiR5v1M" );  // ESAVI - ESAVI outcome
+
+            if ( hasText( value ) )
+            {
+                outcomeCode = EsaviOutcomeCode.valueOf( value.toUpperCase() );
+            }
+
+        } catch ( IllegalArgumentException ignored ) { }
+
+        if (outcomeCode != EsaviOutcomeCode.DIED) {
+            return null;
+        }
+
         // Escenario 1: ¿se solicitó autopsia?=si & ¿se solicitó autopsia verbal?=si, entonces autopsia=si.
         // Escenario 2: ¿se solicitó autopsia?=si & ¿se solicitó autopsia verbal?=no/vacio. En ese caso autopsia=si
         // Escenario 3: ¿se solicitó autopsia?=no/vacio & ¿se solicitó autopsia verbal?=si. En ese caso autopsia=si.
